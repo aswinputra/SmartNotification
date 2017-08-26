@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="smart_notification_top_margin">50dp</dimen>
+    <dimen name="smart_notification_height">200dp</dimen>
+    <dimen name="smart_notification_width">@dimen/smart_notification_height</dimen>
 </resources>

@@ -9,5 +9,15 @@
     tools:showIn="@layout/activity_main">
 
 
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/activity_main_floatingActionButton"
+        android:layout_width="@dimen/smart_notification_width"
+        android:layout_height="@dimen/smart_notification_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="@dimen/smart_notification_top_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="@android:color/background_light"/>
 </android.support.constraint.ConstraintLayout>
