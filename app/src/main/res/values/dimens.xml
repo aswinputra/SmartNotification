@@ -1,7 +1,11 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="activity_margin">16dp</dimen>
 
     <dimen name="smart_notification_top_margin">50dp</dimen>
     <dimen name="smart_notification_height">200dp</dimen>
     <dimen name="smart_notification_width">@dimen/smart_notification_height</dimen>
+
+    <dimen name="radio_button_text_size">18sp</dimen>
+    <dimen name="hint_text_size">16sp</dimen>
 </resources>
