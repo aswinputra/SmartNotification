@@ -4,7 +4,7 @@
     
     <string name="on_until_you_turn_it_off">On until you turn it off</string>
     <string name="on_for_n_hours">On for %1$d hours</string>
-    <string name="on_until_when">On until %1$d:%2$d </string>
+    <string name="on_until_when">On until %1$d:%2$s %3$s</string>
 
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>

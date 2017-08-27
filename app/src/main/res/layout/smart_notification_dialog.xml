@@ -13,51 +13,53 @@
         android:layout_height="wrap_content">
 
         <RadioButton
+            android:id="@+id/dialog_smart_noti_on_until_off_radio"
             style="@style/TextRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/on_until_you_turn_it_off"
-            android:theme="@style/MyRadioButton"/>
+            android:theme="@style/MyRadioButton" />
 
         <RadioButton
-            android:id="@+id/dialog_smart_noti_on_until_radiobut"
+            android:id="@+id/dialog_smart_noti_on_for_radio"
             style="@style/TextRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
             android:text="@string/on_for_n_hours"
-            android:theme="@style/MyRadioButton"/>
+            android:theme="@style/MyRadioButton" />
     </RadioGroup>
 
     <TextView
-        android:id="@+id/dialog_smart_noti_hint"
+        android:id="@+id/dialog_smart_noti_on_until_feedback_tv"
         style="@style/TextHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/dialog_smart_noti_radiogroup"
         android:layout_marginStart="32dp"
-        android:text="@string/on_until_when"/>
+        android:text="@string/on_until_when" />
 
     <LinearLayout
-        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/dialog_smart_noti_radiogroup"
         android:layout_marginTop="-16dp"
-        android:layout_below="@id/dialog_smart_noti_radiogroup">
+        android:orientation="horizontal">
 
         <ImageButton
-
+            android:id="@+id/dialog_smart_noti_decrease_hour_btn"
+            style="@style/MyFlatButton"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_minus_black_24dp"
-            style="@style/MyFlatButton"/>
+            android:src="@drawable/ic_minus_black_24dp" />
 
         <ImageButton
+            android:id="@+id/dialog_smart_noti_increase_hour_btn"
+            style="@style/MyFlatButton"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_black_24dp"
-            style="@style/MyFlatButton"/>
+            android:src="@drawable/ic_add_black_24dp" />
 
     </LinearLayout>
 
@@ -65,18 +67,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/dialog_smart_noti_hint"
+        android:layout_below="@+id/dialog_smart_noti_on_until_feedback_tv"
         android:layout_marginTop="@dimen/activity_margin"
         android:orientation="horizontal">
 
         <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/dialog_smart_noti_cancel_btn"
+            style="@style/MyFlatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel" />
 
         <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/dialog_smart_noti_done_btn"
+            style="@style/MyFlatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/done" />

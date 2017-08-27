@@ -35,5 +35,6 @@
 
     <style name="MyFlatButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="colorControlHighlight">@android:color/darker_gray</item>
+        <item name="android:textColor">@color/text_color_selector</item>
     </style>
 </resources>
