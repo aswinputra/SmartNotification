@@ -20,7 +20,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SmartNotiService"/>
+        <service android:name=".SmartNotiService" />
+        <service android:name=".FocusPeriodService" />
+
+        <activity
+            android:name=".TimeSettingsActivity"
+            android:label="@string/title_activity_time_settings"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

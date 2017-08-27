@@ -34,10 +34,12 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
     private TextView onUntiFeedbackTv;
     private Context context;
     private static int smartNotiHour = 1;
+    private OnSmartNotiStartListener smartNotiStartListener;
 
-    public SmartNotiDialog(Context context) {
+    public SmartNotiDialog(Context context, OnSmartNotiStartListener smartNotiStartListener) {
         super(context);
         this.context = context;
+        this.smartNotiStartListener = smartNotiStartListener;
     }
 
 
@@ -84,6 +86,8 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
             break;
             case R.id.dialog_smart_noti_done_btn: {
                 context.startService(new Intent(context, SmartNotiService.class));
+                context.startService(new Intent(context, FocusPeriodService.class));
+                smartNotiStartListener.onSmartNotiStart();
                 dismiss();
             }
             break;

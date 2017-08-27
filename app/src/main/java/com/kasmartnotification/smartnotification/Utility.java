@@ -11,12 +11,12 @@ import java.util.concurrent.TimeUnit;
 
 public class Utility {
 
-    public static long roundSecond(long millis, long precisionTH){
+    public static long roundSecond(long millis){
         return TimeUnit.MILLISECONDS.toSeconds(millis);
     }
 
-    public static String roundedSecondStr(long millis, long precisionTH){
-        return String.valueOf(roundSecond(millis, precisionTH));
+    public static String roundedSecondStr(long millis){
+        return String.valueOf(roundSecond(millis));
     }
 
     public static int getCurrentHour(int hourToAdd){

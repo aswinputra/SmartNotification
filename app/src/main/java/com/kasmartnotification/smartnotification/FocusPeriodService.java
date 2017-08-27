@@ -8,14 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import static java.lang.Math.round;
-
 /**
  * Created by kiman on 27/8/17.
  */
 
-public class SmartNotiService extends Service {
-
+public class FocusPeriodService extends Service {
     private LocalBroadcastManager broadcastManager;
 
     @Nullable
@@ -32,25 +29,21 @@ public class SmartNotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        CountDownTimer timer = new CountDownTimer(20000, Constants.COUNTDOWN_INTERVAL) {
+        CountDownTimer timer = new CountDownTimer(5000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "Smart Noti onTick: " + Utility.roundSecond(millisUntilFinished));
+                Log.i(Constants.SERVICE_LOG, "FocusPeriod onTick: " + Utility.roundSecond(millisUntilFinished));
                 updateTimerView(Utility.roundedSecondStr(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
-                String finishTime = Constants.END_TIMER;
-                Log.i(Constants.SERVICE_LOG, "Smart Noti Timer is finished");
-                MyPreferences preferences = MyPreferences.getInstance(getApplicationContext());
-                preferences.setSmartNotiServiceStatus(false);
+                String finishTime = "0";
+                Log.i(Constants.SERVICE_LOG, "FocusPeriod Timer is finished");
                 updateTimerView(finishTime);
             }
         };
         timer.start();
-        MyPreferences preferences = MyPreferences.getInstance(getApplicationContext());
-        preferences.setSmartNotiServiceStatus(true);
         return START_STICKY;
     }
 
@@ -65,7 +58,7 @@ public class SmartNotiService extends Service {
      * @param time
      */
     private void updateTimerView(String time){
-        Intent intent = new Intent(Constants.UPDATE_TIME);
+        Intent intent = new Intent(Constants.UPDATE_FOCUS_TIME);
         if(time != null)
             intent.putExtra(Constants.REMAINING_TIME, time);
         broadcastManager.sendBroadcast(intent);

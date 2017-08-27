@@ -1,25 +1,20 @@
 package com.kasmartnotification.smartnotification;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener {
 
     private FloatingActionButton smartNotiFab;
     private BroadcastReceiver broadcastReceiver;
@@ -38,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         smartNotiFab.setOnClickListener(this);
 
         setUpBroadcastReceiver();
+
     }
 
     @Override
@@ -62,18 +58,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    public void showDialog(){
-        SmartNotiDialog dialog = new SmartNotiDialog(this);
+    public void showDialog() {
+        SmartNotiDialog dialog = new SmartNotiDialog(this, this);
         dialog.setContentView(R.layout.smart_notification_dialog);
         dialog.show();
     }
 
-    public void setUpBroadcastReceiver(){
+    public void setUpBroadcastReceiver() {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String time = intent.getStringExtra(Constant.REMAINING_TIME);
+                String time = intent.getStringExtra(Constants.REMAINING_TIME);
                 timerTv.setText(time);
+                if(time.equals(Constants.END_TIMER)){
+                    prepareForOtherTimer(Constants.BREAK_TIMER);
+                }
             }
         };
     }
@@ -82,8 +81,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
-                new IntentFilter(Constant.UPDATE_TIME)
+                new IntentFilter(Constants.UPDATE_FOCUS_TIME)
         );
+
+        //TODO: checks whether it timer is running or not, so that the icon and the view is properly done
     }
 
     @Override
@@ -97,9 +98,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_main_fab_smartnotification: {
+                //TODO: checks whether it timer is running or not, so that the icon and the view is properly done
                 showDialog();
-            }break;
+            }
+            break;
         }
 
+    }
+
+    @Override
+    public void onSmartNotiStart() {
+        smartNotiFab.setImageResource(R.drawable.ic_no_noti);
+        //TODO: show the related info on the screen
+    }
+
+    private void prepareForOtherTimer(String whichTimer){
+        MyPreferences preferences = MyPreferences.getInstance(getApplicationContext());
+        if (preferences.getSmartNotiServiceStatus()) {
+            if (whichTimer.equals(Constants.NEW_SMART_NOTI)) {
+                smartNotiFab.setImageResource(R.drawable.ic_noti);
+            } else if (whichTimer.equals(Constants.BREAK_TIMER)) {
+                startService(new Intent(getApplicationContext(), FocusPeriodService.class));
+            }
+        }
     }
 }
