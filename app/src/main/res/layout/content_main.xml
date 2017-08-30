@@ -5,28 +5,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.kasmartnotification.smartnotification.MainActivity"
+    tools:context="com.kasmartnotification.smartnotification.Controller.MainActivity"
     tools:showIn="@layout/activity_main">
 
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/activity_main_fab_smartnotification"
-        android:layout_width="@dimen/smart_notification_width"
+        android:layout_width="198dp"
         android:layout_height="@dimen/smart_notification_height"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/smart_notification_top_margin"
+        app:backgroundTint="@android:color/background_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:backgroundTint="@android:color/background_light"
-        app:srcCompat="@drawable/ic_noti"/>
+        app:srcCompat="@drawable/ic_noti" />
+
+    <TextView
+        android:id="@+id/activity_main_next_break_in"
+        style="@style/MainActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin"
+        android:text="@string/next_break_in"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_fab_smartnotification" />
 
     <TextView
         android:id="@+id/activity_main_focus_period_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:textAlignment="textEnd"
         android:textColor="@android:color/background_light"
-        android:padding="12dp"/>
+        android:textSize="28sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_next_break_in" />
 
+    <TextView
+        android:id="@+id/activity_main_minutes"
+        style="@style/MainActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:text="@string/minutes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_focus_period_timer" />
+
+    <TextView
+        android:id="@+id/activity_main_smartnotification"
+        style="@style/MainActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin"
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_fab_smartnotification" />
+
+    <TextView
+        android:id="@+id/activity_main_finishes"
+        style="@style/MainActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:text="@string/finishes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_smartnotification" />
+
+    <TextView
+        android:id="@+id/activity_main_end_time"
+        style="@style/MainActivityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingStart="@dimen/activity_margin"
+        android:textSize="28sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_finishes" />
 </android.support.constraint.ConstraintLayout>

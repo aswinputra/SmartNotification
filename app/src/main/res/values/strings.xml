@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Smart Notification</string>
+    <string name="title_activity_time_settings">TimeSettingsActivity</string>
+
     <string name="action_settings">Settings</string>
 
     <string name="on_until_you_turn_it_off">On until you turn it off</string>
@@ -8,6 +10,9 @@
 
     <string name="cancel">Cancel</string>
     <string name="done">Done</string>
-    <string name="title_activity_time_settings">TimeSettingsActivity</string>
 
+    <string name="next_break_in"><b>Next break in</b></string>
+    <string name="next_focus_in"><b>Next Focus in</b></string>
+    <string name="minutes">minutes</string>
+    <string name="finishes">finishes at</string>
 </resources>

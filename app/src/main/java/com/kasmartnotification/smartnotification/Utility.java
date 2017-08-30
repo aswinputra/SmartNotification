@@ -1,7 +1,13 @@
 package com.kasmartnotification.smartnotification;
 
+import android.database.sqlite.SQLiteException;
+
+import com.kasmartnotification.smartnotification.Model.Setting;
+import com.kasmartnotification.smartnotification.Model.Status;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -30,4 +36,31 @@ public class Utility {
         return String.format(Locale.UK, "%02d", calendar.get(Calendar.MINUTE));
     }
 
+    public static Status findStatusFromDB(String name){
+        try {
+            List<Status> statuses = Status.listAll(Status.class);
+            for (Status status : statuses) {
+                if (status.is(name)) {
+                    return status;
+                }
+            }
+            return null;
+        }catch (SQLiteException e){
+            return null;
+        }
+    }
+
+    public static Setting findSettingFromDB(String name){
+        try {
+            List<Setting> settings = Setting.listAll(Setting.class);
+            for (Setting setting : settings) {
+                if (setting.is(name)) {
+                    return setting;
+                }
+            }
+            return null;
+        }catch (SQLiteException e){
+            return null;
+        }
+    }
 }
