@@ -11,9 +11,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
+
+import java.util.Calendar;
 
 /**
  * Created by kiman on 27/8/17.
@@ -82,7 +85,13 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
             }
             break;
             case R.id.dialog_smart_noti_done_btn: {
-                context.startService(new Intent(context, SmartNotiService.class));
+                //check if it's unlimited or bounded by time
+                if(onUntilOffRadio.isChecked()){
+                    Utility.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED, true, null, null);
+                }else if(onForNhourRadio.isChecked()){
+                    saveSmartNotiEndTime();
+                    context.startService(new Intent(context, SmartNotiService.class));
+                }
                 context.startService(new Intent(context, FocusPeriodService.class));
                 smartNotiStartListener.onSmartNotiStart();
                 dismiss();
@@ -92,7 +101,6 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
     }
 
     private void increaseHour(boolean increase) {
-        Resources res = context.getResources();
         if(increase) {
             smartNotiHour++;
         }else{
@@ -106,26 +114,27 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
         }else if(smartNotiHour >= 24){
             increaseBtn.setEnabled(false);
         }
-
         setTimeAndHint(smartNotiHour);
-
     }
+
+    //TODO: should we think about when the minute change and users haven't decided yet
+    //because if that's the case, then endTime shown and the endTime saved to DB will be different
 
     private void setTimeAndHint(int nHour){
         Resources res = context.getResources();
 
-        int hour = Utility.getCurrentHour(smartNotiHour);
-        String amPM = "";
-        if(hour < 12){
-            amPM = "AM";
-        }else{
-            hour = hour -12;
-            amPM = "PM";
-        }
-
+        String endTime = Utility.getTimeString(Utility.getAddedCalendar(smartNotiHour));
         String onForNHours = String.format(res.getString(R.string.on_for_n_hours), nHour);
-        String onUntilFeedback = String.format(res.getString(R.string.on_until_when), hour, Utility.getCurrentMinute(), amPM);
+        String onUntilFeedback = String.format(res.getString(R.string.on_until_when), endTime);
+
         onForNhourRadio.setText(onForNHours);
         onUntiFeedbackTv.setText(onUntilFeedback);
+    }
+
+    private void saveSmartNotiEndTime(){
+//        Calendar endTime = Utility.getAddedCalendar(smartNotiHour);
+        Calendar endTime = Calendar.getInstance();
+        endTime.add(Calendar.MINUTE, 3);
+        Utility.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);
     }
 }

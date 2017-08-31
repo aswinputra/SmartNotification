@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,9 +14,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.OnSmartNotiStartListener;
 import com.kasmartnotification.smartnotification.R;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView timerTV;
     private TextView minutesTV;
     private TextView SmartNotiTV;
-    private TextView finishesTV;
+    private TextView untilTV;
     private TextView endTimeTV;
 
     @Override
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         timerTV = findViewById(R.id.activity_main_focus_period_timer);
         minutesTV = findViewById(R.id.activity_main_minutes);
         SmartNotiTV = findViewById(R.id.activity_main_smartnotification);
-        finishesTV = findViewById(R.id.activity_main_finishes);
+        untilTV = findViewById(R.id.activity_main_until);
         endTimeTV = findViewById(R.id.activity_main_end_time);
         smartNotiFab = findViewById(R.id.activity_main_fab_smartnotification);
         smartNotiFab.setOnClickListener(this);
@@ -91,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(Constants.UPDATE_PERIOD_TIME.equals(intent.getAction())) {
+                if (Constants.UPDATE_PERIOD_TIME.equals(intent.getAction())) {
                     String time = intent.getStringExtra(Constants.REMAINING_TIME);
                     timerTV.setText(time);
                     if (time.equals(Constants.END_TIMER)) {
-                        timerTV.setText(Constants.END_TIMER);
+                        timerTV.setText(Constants.ZERO);
                         Status status = Utility.findStatusFromDB(Constants.PREVIOUS_TIMER);
                         if (status != null && status.getContent().equals(Constants.BREAK_TIMER)) {
                             prepareForOtherTimer(Constants.FOCUS_TIMER);
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 }
-                if(Constants.SMART_NOTIFICATION_END.equals(intent.getAction())){
+                if (Constants.SMART_NOTIFICATION_END.equals(intent.getAction())) {
                     stopSmartNoti();
                 }
             }
@@ -118,12 +117,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intentFilter.addAction(Constants.UPDATE_PERIOD_TIME);
         intentFilter.addAction(Constants.SMART_NOTIFICATION_END);
         LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver), intentFilter);
-
-        //TODO: checks whether it timer is running or not, so that the icon and the view is properly done
+        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null);
+        refreshView();
     }
 
     @Override
     protected void onStop() {
+        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onStop();
     }
@@ -132,11 +132,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_main_fab_smartnotification: {
-                Status status = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
-                if (status != null && status.isRunning()) {
-                    stopSmartNoti();
-                } else {
+                if (isNotStarted()) {
                     showDialog();
+                } else {
+                    stopSmartNoti();
                 }
             }
             break;
@@ -148,47 +147,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stopService(new Intent(MainActivity.this, SmartNotiService.class));
         stopService(new Intent(MainActivity.this, FocusPeriodService.class));
         stopService(new Intent(MainActivity.this, BreakPeriodService.class));
-        toggleFeedbackVis(false);
-        smartNotiFab.setImageResource(R.drawable.ic_noti);
+        Utility.deleteStatusEntity();
+        setSmartNotiOffView();
     }
 
     @Override
     public void onSmartNotiStart() {
-        Status prvTimerStatus = Utility.findStatusFromDB(Constants.PREVIOUS_TIMER);
-        if(prvTimerStatus == null) {
-            prvTimerStatus = new Status(Constants.PREVIOUS_TIMER, Constants.FOCUS_TIMER);
-        }else{
-            prvTimerStatus.setContent(Constants.FOCUS_TIMER);
-        }
-        prvTimerStatus.save();
-
-        smartNotiFab.setImageResource(R.drawable.ic_no_noti);
-        toggleFeedbackVis(true);
+        setSmartNotiOnView();
     }
 
     private void prepareForOtherTimer(String whichTimer) {
-        Status status = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
-        Status prvTimerStatus = Utility.findStatusFromDB(Constants.PREVIOUS_TIMER);
         //TODO: is this supposed to be here?
-        //if SMART NOTIFICATION IS STILL ON
-        if (status != null && status.isRunning()) {
+        if (Utility.isSmartNotiInUse()) {
             switch (whichTimer) {
                 case (Constants.FOCUS_TIMER): {
                     nextBreakInTV.setText(getResources().getString(R.string.next_break_in));
                     startService(new Intent(getApplicationContext(), FocusPeriodService.class));
-                    if(prvTimerStatus!=null) {
-                        prvTimerStatus.setContent(Constants.FOCUS_TIMER);
-                        prvTimerStatus.save();
-                    }
                 }
                 break;
                 case (Constants.BREAK_TIMER): {
                     nextBreakInTV.setText(getResources().getString(R.string.next_focus_in));
                     startService(new Intent(getApplicationContext(), BreakPeriodService.class));
-                    if(prvTimerStatus!=null) {
-                        prvTimerStatus.setContent(Constants.BREAK_TIMER);
-                        prvTimerStatus.save();
-                    }
                 }
                 break;
             }
@@ -202,15 +181,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             timerTV.setVisibility(View.VISIBLE);
             minutesTV.setVisibility(View.VISIBLE);
             SmartNotiTV.setVisibility(View.VISIBLE);
-            finishesTV.setVisibility(View.VISIBLE);
+            untilTV.setVisibility(View.VISIBLE);
             endTimeTV.setVisibility(View.VISIBLE);
         } else {
             nextBreakInTV.setVisibility(View.GONE);
             timerTV.setVisibility(View.GONE);
             minutesTV.setVisibility(View.GONE);
             SmartNotiTV.setVisibility(View.GONE);
-            finishesTV.setVisibility(View.GONE);
+            untilTV.setVisibility(View.GONE);
             endTimeTV.setVisibility(View.GONE);
         }
+    }
+
+    private boolean isNotStarted() {
+        Status smartNotiStatus = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
+        Status smartNotiUnbounded = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION_UNBOUNDED);
+        return smartNotiStatus == null && smartNotiUnbounded == null;
+    }
+
+    private void refreshView() {
+        Status focusTimer = Utility.findStatusFromDB(Constants.FOCUS_TIMER);
+        Status breakTimer = Utility.findStatusFromDB(Constants.BREAK_TIMER);
+
+        if (Utility.isSmartNotiInUse()) {
+            setSmartNotiOnView();
+            if (focusTimer != null && focusTimer.isRunning()) {
+                nextBreakInTV.setText(getResources().getString(R.string.next_break_in));
+            } else if (breakTimer != null && breakTimer.isRunning()) {
+                nextBreakInTV.setText(getResources().getString(R.string.next_focus_in));
+            }
+        } else {
+            setSmartNotiOffView();
+        }
+    }
+
+    private void setSmartNotiOnView() {
+        smartNotiFab.setImageResource(R.drawable.ic_no_noti);
+        toggleFeedbackVis(true);
+        Setting endTime = Utility.findSettingFromDB(Constants.SMART_NOTIFICATION_END_TIME);
+        if (endTime != null) {
+            String test = Utility.getTimeString(endTime.getCalendar());
+            endTimeTV.setText(test);
+        } else {
+            endTimeTV.setText(getResources().getString(R.string.turned_off));
+        }
+    }
+
+    private void setSmartNotiOffView() {
+        toggleFeedbackVis(false);
+        smartNotiFab.setImageResource(R.drawable.ic_noti);
     }
 }

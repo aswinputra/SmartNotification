@@ -1,5 +1,7 @@
 package com.kasmartnotification.smartnotification.Model;
 
+import android.support.annotation.Nullable;
+
 import com.orm.SugarRecord;
 
 /**
@@ -23,6 +25,25 @@ public class Status extends SugarRecord<Status>{
     public Status(String name, boolean running) {
         this.name = name;
         this.running = running;
+    }
+
+    public Status(String name, @Nullable Boolean running, @Nullable String content) {
+        this.name = name;
+        if(running!= null) {
+            this.running = running;
+        }
+        if(content != null) {
+            this.content = content;
+        }
+    }
+
+    public void set(@Nullable Boolean running, @Nullable String content) {
+        if(running!= null) {
+            this.running = running;
+        }
+        if(content != null) {
+            this.content = content;
+        }
     }
 
     public String getName() {

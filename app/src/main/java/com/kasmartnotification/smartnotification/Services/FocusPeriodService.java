@@ -34,33 +34,26 @@ public class FocusPeriodService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-         timer = new CountDownTimer(5000, Constants.COUNTDOWN_INTERVAL) {
+        timer = new CountDownTimer(120000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "FocusPeriod onTick: " + Utility.roundSecond(millisUntilFinished));
-                updateTimerView(Utility.roundedSecondStr(millisUntilFinished));
+                Log.i(Constants.SERVICE_LOG, "FocusPeriod onTick: " + Utility.getMinFromMillis(millisUntilFinished));
+                updateTimerView(Utility.getMinutesStr(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
                 Log.i(Constants.SERVICE_LOG, "FocusPeriod Timer is finished");
-                Status focusTimerStatus = Utility.findStatusFromDB(Constants.FOCUS_TIMER);
-                if(focusTimerStatus != null) {
-                    focusTimerStatus.setRunning(false);
-                    focusTimerStatus.save();
-                }
+                Utility.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, false, null, null);
                 updateTimerView(Constants.END_TIMER);
+                if(!Utility.isBroadcastReceiverRegistered()){
+                    continueToBreak();
+                }
             }
         };
         timer.start();
-
-        Status focusTimerStatus = Utility.findStatusFromDB(Constants.FOCUS_TIMER);
-        if(focusTimerStatus == null) {
-            focusTimerStatus = new Status(Constants.FOCUS_TIMER, true);
-        }else{
-            focusTimerStatus.setRunning(true);
-        }
-        focusTimerStatus.save();
+        Utility.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.FOCUS_TIMER, null);
+        Utility.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, true, null, null);
 
         return START_STICKY;
     }
@@ -77,13 +70,20 @@ public class FocusPeriodService extends Service {
     /**
      * Using Intent and Local Broadcast to send the time information from Service thread to
      * the UI thread for updating timer value
+     *
      * @param time
      */
-    private void updateTimerView(String time){
+    private void updateTimerView(String time) {
         Intent intent = new Intent(Constants.UPDATE_PERIOD_TIME);
-        if(time != null)
+        if (time != null)
             intent.putExtra(Constants.REMAINING_TIME, time);
         broadcastManager.sendBroadcast(intent);
     }
 
+    private void continueToBreak() {
+        if (Utility.isSmartNotiInUse()) {
+            Intent intent = new Intent(getApplicationContext(), BreakPeriodService.class);
+            startService(intent);
+        }
+    }
 }

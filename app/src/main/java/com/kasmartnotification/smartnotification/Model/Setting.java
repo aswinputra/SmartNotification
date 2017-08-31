@@ -1,6 +1,10 @@
 package com.kasmartnotification.smartnotification.Model;
 
+import android.support.annotation.Nullable;
+
 import com.orm.SugarRecord;
+
+import java.util.Calendar;
 
 /**
  * Created by kiman on 29/8/17.
@@ -10,6 +14,7 @@ public class Setting extends SugarRecord<Setting> {
 
     private String name;
     private String value;
+    private Calendar calendar;
 
     public Setting(){
 
@@ -18,6 +23,25 @@ public class Setting extends SugarRecord<Setting> {
     public Setting(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    public Setting(String name, @Nullable String value, @Nullable Calendar calendar) {
+        this.name = name;
+        if(value != null) {
+            this.value = value;
+        }
+        if(calendar != null){
+            this.calendar = calendar;
+        }
+    }
+
+    public void set(@Nullable String value, @Nullable Calendar calendar) {
+        if(value != null) {
+            this.value = value;
+        }
+        if(calendar != null){
+            this.calendar = calendar;
+        }
     }
 
     public String getName() {
@@ -34,6 +58,14 @@ public class Setting extends SugarRecord<Setting> {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
     }
 
     public boolean is(String name){

@@ -34,33 +34,28 @@ public class BreakPeriodService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-         timer = new CountDownTimer(5000, Constants.COUNTDOWN_INTERVAL) {
+         timer = new CountDownTimer(60000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + Utility.roundSecond(millisUntilFinished));
-                updateTimerView(Utility.roundedSecondStr(millisUntilFinished));
+                Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + Utility.getMinFromMillis(millisUntilFinished));
+                updateTimerView(Utility.getMinutesStr(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
                 Log.i(Constants.SERVICE_LOG, "BreakPeriod Timer is finished");
-                Status breakTimerStatus = Utility.findStatusFromDB(Constants.BREAK_TIMER);
-                if(breakTimerStatus != null) {
-                    breakTimerStatus.setRunning(false);
-                    breakTimerStatus.save();
-                }
+
+                Utility.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, false, null, null);
+
                 updateTimerView(Constants.END_TIMER);
+                if(!Utility.isBroadcastReceiverRegistered()){
+                    continueToFocus();
+                }
             }
         };
         timer.start();
-
-        Status breakTimerStatus = Utility.findStatusFromDB(Constants.BREAK_TIMER);
-        if(breakTimerStatus == null) {
-            breakTimerStatus = new Status(Constants.BREAK_TIMER, true);
-        }else{
-            breakTimerStatus.setRunning(true);
-        }
-        breakTimerStatus.save();
+        Utility.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.BREAK_TIMER, null);
+        Utility.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, true, null, null);
 
         return START_STICKY;
     }
@@ -84,5 +79,12 @@ public class BreakPeriodService extends Service {
         if(time != null)
             intent.putExtra(Constants.REMAINING_TIME, time);
         broadcastManager.sendBroadcast(intent);
+    }
+
+    private void continueToFocus(){
+        if(Utility.isSmartNotiInUse()) {
+            Intent intent = new Intent(getApplicationContext(), FocusPeriodService.class);
+            startService(intent);
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Utility;
 
@@ -37,33 +38,28 @@ public class SmartNotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //TODO: get millisInFuture from Setting
-        timer = new CountDownTimer(20000, Constants.COUNTDOWN_INTERVAL) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "Smart Noti onTick: " + Utility.roundSecond(millisUntilFinished));
-            }
-
-            @Override
-            public void onFinish() {
-                Log.i(Constants.SERVICE_LOG, "Smart Noti Timer is finished");
-                Status smartNotiStatus = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
-                if(smartNotiStatus != null) {
-                    smartNotiStatus.setRunning(false);
-                    smartNotiStatus.save();
+        Setting endTime = Utility.findSettingFromDB(Constants.SMART_NOTIFICATION_END_TIME);
+        if(endTime!=null) {
+            long millisInFuture = Utility.getMillisDiff(endTime.getCalendar());
+            timer = new CountDownTimer(millisInFuture, Constants.COUNTDOWN_INTERVAL) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    Log.i(Constants.SERVICE_LOG, "Smart Noti onTick: " + Utility.getMinFromMillis(millisUntilFinished));
                 }
-                sendEndFlag();
-            }
-        };
-        timer.start();
 
-        Status smartNotiStatus = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
-        if(smartNotiStatus == null) {
-            smartNotiStatus = new Status(Constants.SMART_NOTIFICATION, true);
-        }else{
-            smartNotiStatus.setRunning(true);
+                @Override
+                public void onFinish() {
+                    Log.i(Constants.SERVICE_LOG, "Smart Noti Timer is finished");
+
+                    Utility.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION, false, null, null);
+
+                    sendEndFlag();
+                }
+            };
+            timer.start();
+
+            Utility.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION, true, null, null);
         }
-        smartNotiStatus.save();
 
         return START_STICKY;
     }
