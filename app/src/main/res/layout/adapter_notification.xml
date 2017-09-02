@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/adapter_notification_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/noti_top_padding"
+    style="@style/MyFlatButton">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/adapter_notification_circle_imageview"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/thumbnail"
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/adapter_notification_title"
+        style="@style/TextRadioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/noti_top_padding"
+        android:paddingStart="@dimen/noti_top_padding"
+        app:layout_constraintStart_toEndOf="@id/adapter_notification_circle_imageview"
+        app:layout_constraintTop_toTopOf="parent"
+        android:maxWidth="300dp" />
+
+    <TextView
+        android:id="@+id/adapter_noti_message"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:paddingEnd="@dimen/noti_top_padding"
+        android:paddingStart="@dimen/noti_top_padding"
+        app:layout_constraintStart_toEndOf="@id/adapter_notification_circle_imageview"
+        app:layout_constraintTop_toBottomOf="@id/adapter_notification_title"
+        android:maxWidth="300dp"/>
+
+    <TextView
+        android:id="@+id/adapter_noti_minute"
+        style="@style/NotiMinute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/adapter_notification_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/adapter_noti_app_icon"
+        android:layout_width="@dimen/app_icon_hint"
+        android:layout_height="@dimen/app_icon_hint"
+        android:contentDescription="@string/app_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
+
+</android.support.constraint.ConstraintLayout>

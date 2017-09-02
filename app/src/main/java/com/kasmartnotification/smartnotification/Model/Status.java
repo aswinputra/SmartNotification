@@ -8,7 +8,7 @@ import com.orm.SugarRecord;
  * Created by kiman on 29/8/17.
  */
 
-public class Status extends SugarRecord<Status>{
+public class Status extends SugarRecord{
     private String name;
     private boolean running;
     private String content;

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
-import com.kasmartnotification.smartnotification.OnSmartNotiStartListener;
+import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartListener;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.BreakPeriodService;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
@@ -26,7 +26,7 @@ import com.kasmartnotification.smartnotification.Services.SmartNotiService;
 import com.kasmartnotification.smartnotification.SmartNotiDialog;
 import com.kasmartnotification.smartnotification.Utility;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener{
 
     private FloatingActionButton smartNotiFab;
     private BroadcastReceiver broadcastReceiver;
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView SmartNotiTV;
     private TextView untilTV;
     private TextView endTimeTV;
+    private NotiBottomSheet bottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toggleFeedbackVis(false);
         setUpBroadcastReceiver();
 
+        bottomSheet = new NotiBottomSheet(getApplicationContext(), this);
+
+        getPermission();
     }
 
     @Override
@@ -95,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     timerTV.setText(time);
                     if (time.equals(Constants.END_TIMER)) {
                         timerTV.setText(Constants.ZERO);
-                        Status status = Utility.findStatusFromDB(Constants.PREVIOUS_TIMER);
+                        Status status = Utility.findFromDB(Status.class, Constants.PREVIOUS_TIMER);
                         if (status != null && status.getContent().equals(Constants.BREAK_TIMER)) {
                             prepareForOtherTimer(Constants.FOCUS_TIMER);
                         } else if (status != null && status.getContent().equals(Constants.FOCUS_TIMER)) {
@@ -194,14 +198,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isNotStarted() {
-        Status smartNotiStatus = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
-        Status smartNotiUnbounded = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION_UNBOUNDED);
+        Status smartNotiStatus = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION);
+        Status smartNotiUnbounded = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED);
         return smartNotiStatus == null && smartNotiUnbounded == null;
     }
 
     private void refreshView() {
-        Status focusTimer = Utility.findStatusFromDB(Constants.FOCUS_TIMER);
-        Status breakTimer = Utility.findStatusFromDB(Constants.BREAK_TIMER);
+        Status focusTimer = Utility.findFromDB(Status.class, Constants.FOCUS_TIMER);
+        Status breakTimer = Utility.findFromDB(Status.class, Constants.BREAK_TIMER);
 
         if (Utility.isSmartNotiInUse()) {
             setSmartNotiOnView();
@@ -213,12 +217,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             setSmartNotiOffView();
         }
+        bottomSheet.update();
     }
 
     private void setSmartNotiOnView() {
         smartNotiFab.setImageResource(R.drawable.ic_no_noti);
         toggleFeedbackVis(true);
-        Setting endTime = Utility.findSettingFromDB(Constants.SMART_NOTIFICATION_END_TIME);
+        Setting endTime = Utility.findFromDB(Setting.class, Constants.SMART_NOTIFICATION_END_TIME);
         if (endTime != null) {
             String test = Utility.getTimeString(endTime.getCalendar());
             endTimeTV.setText(test);
@@ -231,4 +236,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toggleFeedbackVis(false);
         smartNotiFab.setImageResource(R.drawable.ic_noti);
     }
+
+    private void getPermission() {
+        if (!Utility.isNotificationListenEnable(getApplicationContext())) {
+            //TODO: show dialog asking to go to notification access setting
+            Intent intent = new Intent(Constants.NOTIFICATION_ACCESS_SETTING);
+            startActivity(intent);
+        }
+    }
+
+
 }

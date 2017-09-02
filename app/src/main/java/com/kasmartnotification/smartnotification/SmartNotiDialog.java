@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartListener;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
@@ -132,7 +133,6 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
     }
 
     private void saveSmartNotiEndTime(){
-//        Calendar endTime = Utility.getAddedCalendar(smartNotiHour);
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 3);
         Utility.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);

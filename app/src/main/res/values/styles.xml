@@ -34,6 +34,12 @@
         <item name="android:textSize">@dimen/hint_text_size</item>
     </style>
 
+    <style name="NotiMinute" parent="TextAppearance.Design.Hint">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/noti_minute_text_size</item>
+    </style>
+
     <style name="MyRadioButton" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
@@ -41,5 +47,17 @@
     <style name="MyFlatButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="colorControlHighlight">@android:color/darker_gray</item>
         <item name="android:textColor">@color/text_color_selector</item>
+    </style>
+
+    <style name="MyTitle" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@android:color/background_dark</item>
+        <item name="android:textSize">@dimen/radio_button_text_size</item>
+    </style>
+
+    <style name="ListTextSection" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/colorBlackSecondaryText</item>
+        <item name="android:textSize">@dimen/text_list_title</item>
     </style>
 </resources>

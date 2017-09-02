@@ -1,11 +1,19 @@
 package com.kasmartnotification.smartnotification;
 
-import android.database.sqlite.SQLiteException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import com.kasmartnotification.smartnotification.Model.BlackListPackage;
+import com.kasmartnotification.smartnotification.Model.Notifications;
+import com.kasmartnotification.smartnotification.Model.Section;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
+import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -17,114 +25,153 @@ import java.util.concurrent.TimeUnit;
 
 public class Utility {
 
-    public static long getMinFromMillis(long millis){
+    public static long getMinFromMillis(long millis) {
         return TimeUnit.MILLISECONDS.toMinutes(millis) + 1;
     }
 
-    public static String getMinutesStr(long millis){
+    public static String getMinutesStr(long millis) {
         return String.valueOf(getMinFromMillis(millis));
     }
 
-    public static Calendar getAddedCalendar(int hourToAdd){
+    public static Calendar getAddedCalendar(int hourToAdd) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, hourToAdd);
         return calendar;
     }
 
-    public static String getCurrentMinute(Calendar endTime){
+    public static String getCurrentMinute(Calendar endTime) {
         return String.format(Locale.UK, "%02d", endTime.get(Calendar.MINUTE));
     }
 
-    public static Status findStatusFromDB(String name){
+    public static int timeDiffInMinute(long timeToCompare) {
+        long now = Calendar.getInstance().getTimeInMillis();
+        long diff = now - timeToCompare;
+        return (int) (diff / (60 * 1000) % 60);
+    }
+
+    public static int timeDiffInHour(int minutes) {
+        return minutes / 60;
+    }
+
+    public static <T extends SugarRecord> T findFromDB(Class<T> type, String name) {
         try {
-            List<Status> statuses = Status.listAll(Status.class);
-            for (Status status : statuses) {
-                if (status.is(name)) {
-                    return status;
-                }
-            }
-            return null;
-        }catch (SQLiteException e){
+            List<T> objects = T.find(type, "name = ?", name);
+            return objects.get(0);
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public static Setting findSettingFromDB(String name){
-        try {
-            List<Setting> settings = Setting.listAll(Setting.class);
-            for (Setting setting : settings) {
-                if (setting.is(name)) {
-                    return setting;
-                }
-            }
-            return null;
-        }catch (SQLiteException e){
-            return null;
-        }
-    }
-
-    public static <T> void createOrSetDBObject(Class<T> type, String name, @Nullable Boolean running, @Nullable String content, @Nullable Calendar calendar){
-        if(type == Setting.class){
-            Setting setting = findSettingFromDB(name);
-            if(setting == null) {
+    public static <T> void createOrSetDBObject(Class<T> type, String name, @Nullable Boolean running, @Nullable String content, @Nullable Calendar calendar) {
+        if (type == Setting.class) {
+            Setting setting = findFromDB(Setting.class, name);
+            if (setting == null) {
                 setting = new Setting(name, content, calendar);
-            }else{
+            } else {
                 setting.set(content, calendar);
             }
             setting.save();
-        }else if(type == Status.class){
-            Status status = findStatusFromDB(name);
-            if(status == null) {
+        } else if (type == Status.class) {
+            Status status = findFromDB(Status.class, name);
+            if (status == null) {
                 status = new Status(name, running, content);
-            }else{
+            } else {
                 status.set(running, content);
             }
             status.save();
+        } else if (type == BlackListPackage.class) {
+            BlackListPackage pkg = findFromDB(BlackListPackage.class, name);
+            if (pkg == null) {
+                pkg = new BlackListPackage(name);
+                pkg.save();
+            }
         }
     }
 
-    public static String getTimeString(Calendar endTime){
+    public static String getTimeString(Calendar endTime) {
         int hour = endTime.get(Calendar.HOUR_OF_DAY);
         String minute = getCurrentMinute(endTime);
         String amPM = "";
-        if(hour < 12){
+        if (hour < 12) {
             amPM = "AM";
-        }else{
-            hour = hour -12;
+        } else {
+            hour = hour - 12;
             amPM = "PM";
         }
 
         return hour + ":" + minute + " " + amPM;
     }
 
-    public static void deleteStatusEntity(){
+    public static void deleteStatusEntity() {
         Status.deleteAll(Status.class);
         deleteEndTime();
     }
 
-    public static void deleteEndTime(){
-        Setting setting = findSettingFromDB(Constants.SMART_NOTIFICATION_END_TIME);
-        if(setting != null){
+    public static void deleteEndTime() {
+        Setting setting = findFromDB(Setting.class, Constants.SMART_NOTIFICATION_END_TIME);
+        if (setting != null) {
             setting.delete();
         }
     }
 
-    public static long getMillisDiff(Calendar endTime){
+    public static long getMillisDiff(Calendar endTime) {
         Calendar now = Calendar.getInstance();
         return endTime.getTimeInMillis() - now.getTimeInMillis();
     }
 
-    public static boolean isSmartNotiInUse(){
-        Status smartNotiStatus = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION);
-        Status smartNotiUnbounded = Utility.findStatusFromDB(Constants.SMART_NOTIFICATION_UNBOUNDED);
+    public static boolean isSmartNotiInUse() {
+        Status smartNotiStatus = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION);
+        Status smartNotiUnbounded = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED);
         return smartNotiStatus != null && smartNotiStatus.isRunning() || smartNotiUnbounded != null;
     }
 
     public static boolean isBroadcastReceiverRegistered() {
-        Status registeredLocalBroadcast = Utility.findStatusFromDB(Constants.LOCAL_BROADCAST_REGISTERED);
+        Status registeredLocalBroadcast = Utility.findFromDB(Status.class, Constants.LOCAL_BROADCAST_REGISTERED);
         if (registeredLocalBroadcast != null) {
             return registeredLocalBroadcast.isRunning();
         }
         return false;
+    }
+
+    public static boolean isNotificationListenEnable(Context context) {
+        return isNotificationListenEnable(context, context.getPackageName());
+    }
+
+    private static boolean isNotificationListenEnable(Context context, String pkgName) {
+        final String flat = Settings.Secure.getString(context.getContentResolver(), Constants.ENABLED_NOTIFICATION_LISTENERS);
+        if (!TextUtils.isEmpty(flat)) {
+            final String[] names = flat.split(":");
+            for (int i = 0; i < names.length; i++) {
+                final ComponentName cn = ComponentName.unflattenFromString(names[i]);
+                if (cn != null) {
+                    if (TextUtils.equals(pkgName, cn.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static Section[] getSortedSectionArray(Notifications notifications) throws NullPointerException {
+        if (notifications != null) {
+            String[][] headers = notifications.getAllCategoryWithAmount();
+
+            List<Section> sectionsList = new ArrayList<>();
+            int sectionIndex = 0;
+            for (int i = 0; i < headers.length; i++) {
+                sectionsList.add(new Section(sectionIndex, headers[i][0], i));
+                sectionIndex += Integer.parseInt(headers[i][1]);
+            }
+
+            Section[] sectionsArray = new Section[sectionsList.size()];
+            for (int i = 0; i < sectionsList.size(); i++) {
+                sectionsArray[i] = sectionsList.get(i);
+            }
+
+            return sectionsArray;
+        } else {
+            throw new NullPointerException("Argument notifications is null");
+        }
     }
 }

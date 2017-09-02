@@ -14,10 +14,10 @@ public class Constants {
 
     public static final String SERVICE_LOG = "SERVICE_LOG";
     public static final String STATUS = "STATUS";
+    public static final String NOTI_LISTENER_LOG = "NOTI_LISTENER_LOG";
+    public static final String MISC = "MISC_LOG";
+    public static final String EXCEPTION = "EXCEPTION_LOG";
     public static final String TEST = "TEST";
-
-    public static final String APP_PREFERENCES = "KA_SMART_NOTIFICATION_PREFERENCES";
-    public static final String SMART_NOTI_SERVICE_RUNNING = "SMART_NOTI_SERVICE_RUNNING";
 
     public static final String SMART_NOTIFICATION = "SMART_NOTIFICATION";
     public static final String SMART_NOTIFICATION_END = "SMART_NOTIFICATION_END";
@@ -30,4 +30,8 @@ public class Constants {
 
     public static final String LOCAL_BROADCAST_REGISTERED = "LOCAL_BROADCAST_REGISTERED";
 
+    public static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
+    public static final String NOTIFICATION_ACCESS_SETTING = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
+    public static final String NOTIFICATION_TITLE = "android.title";
+    public static final String NOTIFICATION_MESSAGE = "android.text";
 }

@@ -10,7 +10,7 @@ import java.util.Calendar;
  * Created by kiman on 29/8/17.
  */
 
-public class Setting extends SugarRecord<Setting> {
+public class Setting extends SugarRecord {
 
     private String name;
     private String value;

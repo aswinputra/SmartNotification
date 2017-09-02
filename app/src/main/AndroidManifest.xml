@@ -17,9 +17,15 @@
         <service android:name=".Services.SmartNotiService" />
         <service android:name=".Services.FocusPeriodService" />
         <service android:name=".Services.BreakPeriodService" />
+        <service android:name=".Services.NotificationListener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
 
         <meta-data android:name="DATABASE" android:value="kasmart_notifiation.db" />
-        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="VERSION" android:value="5" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.kasmartnotification.smartnotification" />
 

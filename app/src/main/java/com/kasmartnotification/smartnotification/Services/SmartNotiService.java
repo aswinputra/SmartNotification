@@ -38,7 +38,7 @@ public class SmartNotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Setting endTime = Utility.findSettingFromDB(Constants.SMART_NOTIFICATION_END_TIME);
+        Setting endTime = Utility.findFromDB(Setting.class, Constants.SMART_NOTIFICATION_END_TIME);
         if(endTime!=null) {
             long millisInFuture = Utility.getMillisDiff(endTime.getCalendar());
             timer = new CountDownTimer(millisInFuture, Constants.COUNTDOWN_INTERVAL) {
