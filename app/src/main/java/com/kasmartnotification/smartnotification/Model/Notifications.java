@@ -90,6 +90,7 @@ public class Notifications {
     public void remove(Notification notification) {
         notificationList.remove(notification);
         notification.delete();
+        listener.onRemove(notification);
     }
 
     public void removeAll() {

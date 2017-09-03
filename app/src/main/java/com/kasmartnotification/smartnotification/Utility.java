@@ -134,11 +134,11 @@ public class Utility {
         return registeredLocalBroadcast != null && registeredLocalBroadcast.isRunning();
     }
 
-    public static boolean isNotificationListenEnable(Context context) {
-        return isNotificationListenEnable(context, context.getPackageName());
+    public static boolean isNotificationListenEnabled(Context context) {
+        return isNotificationListenEnabled(context, context.getPackageName());
     }
 
-    private static boolean isNotificationListenEnable(Context context, String pkgName) {
+    private static boolean isNotificationListenEnabled(Context context, String pkgName) {
         final String flat = Settings.Secure.getString(context.getContentResolver(), Constants.ENABLED_NOTIFICATION_LISTENERS);
         if (!TextUtils.isEmpty(flat)) {
             final String[] names = flat.split(":");

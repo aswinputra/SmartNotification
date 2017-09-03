@@ -4,6 +4,8 @@ import com.orm.SugarRecord;
 
 /**
  * Created by kiman on 2/9/17.
+ * This is a class for the packages that are blacklisted, because the information from these packages
+ * doesn't benefits the actual end users
  */
 
 public class BlackListPackage extends SugarRecord{

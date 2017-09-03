@@ -1,4 +1,4 @@
-package com.kasmartnotification.smartnotification;
+package com.kasmartnotification.smartnotification.Controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,12 +11,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartListener;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
+import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
 import com.kasmartnotification.smartnotification.Services.NotificationListener;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
+import com.kasmartnotification.smartnotification.Utility;
 
 import java.util.Calendar;
 
@@ -43,7 +46,6 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
         this.context = context;
         this.smartNotiStartListener = smartNotiStartListener;
     }
-
 
     @Override
     public void setContentView(int layoutResID) {
@@ -136,6 +138,7 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
 
     private void saveSmartNotiEndTime(){
         Calendar endTime = Utility.getAddedCalendar(smartNotiHour);
+//        for testing
 //        Calendar endTime = Calendar.getInstance();
 //        endTime.add(Calendar.MINUTE, 3);
         Utility.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);

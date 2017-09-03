@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.R;
@@ -26,12 +27,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotiViewHolder> {
 
-    private Context mCtx;
+    private Context mContext;
     private Notifications mNotifications;
     private SectionRecyclerViewAdapter mSectionAdapter;
 
-    public NotificationAdapter(Context mCtx, Notifications mNotifications) {
-        this.mCtx = mCtx;
+    public NotificationAdapter(Context context, Notifications mNotifications) {
+        this.mContext = context;
         this.mNotifications = mNotifications;
     }
 
@@ -45,7 +46,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public NotiViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(mCtx).inflate(R.layout.adapter_notification, parent, false);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.adapter_notification, parent, false);
         return new NotiViewHolder(rootView);
     }
 
@@ -56,7 +57,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.messageTV.setText(notification.getMessage());
         Icon icon = notification.getAppIcon();
         if (icon != null) {
-            icon.setTint(ContextCompat.getColor(mCtx, R.color.colorBlackSecondaryText));
+            icon.setTint(ContextCompat.getColor(mContext, R.color.colorBlackSecondaryText));
             holder.appIconTV.setImageIcon(icon);
         }
         setTime(holder.minuteTV, notification.getPostedTime());
@@ -88,29 +89,45 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             layout.setOnClickListener(this);
         }
 
+        /**
+         * When a notification is clicked, the corresponding application will be open
+         * using getLaunchIntentForPackage from PackageManager
+         * Also, the notification will be deleted from the list
+         * !!!!!Notice that there are 2 positions variables in this function, ALWAYS use the pos to get the correct
+         * item from the notification list!!!!!!
+         * @param view is the View object that has clicked
+         */
         @Override
         public void onClick(View view) {
             int actualClickedPos = getAdapterPosition();
             int pos = mSectionAdapter.sectionedPositionToPosition(actualClickedPos);
 
-            PackageManager packageManager = mCtx.getPackageManager();
-            Intent intent = packageManager.getLaunchIntentForPackage(mNotifications.get(pos).getPkgName());
-            mCtx.startActivity(intent);
+            if(view == layout) {
+                PackageManager packageManager = mContext.getPackageManager();
+                Intent intent = packageManager.getLaunchIntentForPackage(mNotifications.get(pos).getPkgName());
+                Notifications.getInstance().remove(mNotifications.get(pos));
+                mContext.startActivity(intent);
+            }
         }
 
+        //for showing context menu if we need to
+        //return true means that the long click is used
         @Override
         public boolean onLongClick(View view) {
-            int actualClickedPos = getAdapterPosition();
-            int pos = mSectionAdapter.sectionedPositionToPosition(actualClickedPos);
+            if(view == layout) {
+                int actualClickedPos = getAdapterPosition();
+                int pos = mSectionAdapter.sectionedPositionToPosition(actualClickedPos);
 
-            return true;
+                return true;
+            }
+            return false;
         }
     }
 
     private void setTime(TextView postedTimeTV, long postedTime) {
         int timeToShow = Utility.timeDiffInMinute(postedTime);
         String timeToShowStr = "";
-        if (timeToShow < 60) {
+        if (timeToShow < Constants.ONE_MINUTE) {
             timeToShowStr += timeToShow + "m";
         } else {
             timeToShow = Utility.timeDiffInHour(timeToShow);

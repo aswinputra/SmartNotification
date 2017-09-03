@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -41,6 +40,7 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView zeroNotiTv;
     private RecyclerView notiRV;
+    private int bottomSheetState;
 
     public NotiBottomSheet(Context context, Activity activity) {
         this.context = context;
@@ -55,11 +55,14 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
         closeBtn.setOnClickListener(this);
         clearAllBtn.setOnClickListener(this);
 
+        bottomSheetState = BottomSheetBehavior.STATE_COLLAPSED;
+
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(700);
+        mBottomSheetBehavior.setPeekHeight(Constants.BOTTOM_SHEET_COLLAPSE_HEIGHT);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                bottomSheetState = newState;
                 if(newState == BottomSheetBehavior.STATE_COLLAPSED){
                     toolbar.setVisibility(View.VISIBLE);
                     appBarLayout.setVisibility(View.VISIBLE);
@@ -83,6 +86,7 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
 
         setUpRecyclerView(activity);
 
+        //TODO: can we make it better?
         Utility.createOrSetDBObject(BlackListPackage.class, "android", null, null, null);
     }
 
@@ -90,7 +94,7 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
         Notifications notifications = Notifications.getInstance();
         notifications.setListener(this);
 
-        toggleClearAllVisibility(notifications);
+        toggleNotificationsVisibility(notifications);
 
         notificationAdapter = new NotificationAdapter(context, notifications);
         notiRV.setLayoutManager(new LinearLayoutManager(context));
@@ -116,6 +120,11 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
     }
 
     @Override
+    public void onRemove(Notification notification) {
+        update();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.bottom_sheet_close:{
@@ -133,14 +142,14 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
             if (Sections.getInstance().update()) {
                 notificationAdapter.notifyDataSetChanged();
                 sectionAdapter.setSections(Sections.getInstance().getSectionArray());
-                toggleClearAllVisibility(Notifications.getInstance());
+                toggleNotificationsVisibility(Notifications.getInstance());
             }
         }catch(Exception e){
             Log.e(Constants.EXCEPTION, e.getMessage());
         }
     }
 
-    private void toggleClearAllVisibility(Notifications notifications){
+    private void toggleNotificationsVisibility(Notifications notifications){
         if(notifications.size() == 0){
             clearAllBtn.setVisibility(View.GONE);
             zeroNotiTv.setVisibility(View.VISIBLE);
@@ -151,5 +160,13 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
             zeroNotiTv.setVisibility(View.GONE);
             notiRV.setVisibility(View.VISIBLE);
         }
+    }
+
+    public boolean isBottomSheetCollapsed() {
+        return bottomSheetState == BottomSheetBehavior.STATE_COLLAPSED;
+    }
+
+    public void collapseBottomSheet(){
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 }

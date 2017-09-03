@@ -23,7 +23,6 @@ import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.BreakPeriodService;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
-import com.kasmartnotification.smartnotification.SmartNotiDialog;
 import com.kasmartnotification.smartnotification.Utility;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener{
@@ -84,84 +83,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    public void showDialog() {
+    public void showSmartNotiDialog() {
         SmartNotiDialog dialog = new SmartNotiDialog(this, this);
         dialog.setContentView(R.layout.smart_notification_dialog);
         dialog.show();
     }
 
+    /**
+     * This functions sets up the BroadcastReceiver to receive broadcast data from the Services:
+     * BreakPeriodService, FocusPeriodService, and SmartNotiService
+     *
+     * PERIOD_TIME is a signal from Break and Focus Period Services to inform to update the time
+     * on this UI thread
+     *  When it's OnTick of the Timer is called in the Service, it will send REMAINING_TIME as a string to display
+     *  But when it's OnFinish is called, it will send END_TIMER to signal that the timer from a Service is finished
+     *  and therefore needs to call the alternative Service, which needs the status flag of the PREVIOUS_TIMER
+     *      so when the previous timer is a break timer, the focus timer will be called and vice versa
+     *
+     * SMART_NOTIFICATION_END is a signal from SmartNotiService to notify that the Smart Notification has ended
+     * so that the view can be updated accordingly
+     */
     public void setUpBroadcastReceiver() {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (Constants.UPDATE_PERIOD_TIME.equals(intent.getAction())) {
-                    String time = intent.getStringExtra(Constants.REMAINING_TIME);
-                    timerTV.setText(time);
-                    if (time.equals(Constants.END_TIMER)) {
-                        timerTV.setText(Constants.ZERO);
-                        Status status = Utility.findFromDB(Status.class, Constants.PREVIOUS_TIMER);
-                        if (status != null && status.getContent().equals(Constants.BREAK_TIMER)) {
-                            prepareForOtherTimer(Constants.FOCUS_TIMER);
-                        } else if (status != null && status.getContent().equals(Constants.FOCUS_TIMER)) {
-                            prepareForOtherTimer(Constants.BREAK_TIMER);
+                try {
+                    if (intent.getAction().equals(Constants.PERIOD_TIME)) {
+                        String time = intent.getStringExtra(Constants.REMAINING_TIME);
+                        timerTV.setText(time);
+                        if (time.equals(Constants.END_TIMER)) {
+                            timerTV.setText(Constants.ZERO);
+                            Status status = Utility.findFromDB(Status.class, Constants.PREVIOUS_TIMER);
+                            if (status != null && status.getContent().equals(Constants.BREAK_TIMER)) {
+                                prepareForOtherTimer(Constants.FOCUS_TIMER);
+                            } else if (status != null && status.getContent().equals(Constants.FOCUS_TIMER)) {
+                                prepareForOtherTimer(Constants.BREAK_TIMER);
+                            }
                         }
                     }
-                }
-                if (Constants.SMART_NOTIFICATION_END.equals(intent.getAction())) {
-                    stopSmartNoti();
+                    if (intent.getAction().equals(Constants.SMART_NOTIFICATION_END)) {
+                        stopSmartNoti();
+                    }
+                }catch (Exception e){
+                    Log.e(Constants.EXCEPTION, e.getMessage());
                 }
             }
         };
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.UPDATE_PERIOD_TIME);
-        intentFilter.addAction(Constants.SMART_NOTIFICATION_END);
-        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver), intentFilter);
-        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null);
-        refreshView();
-    }
-
-    @Override
-    protected void onStop() {
-        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        super.onStop();
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.activity_main_fab_smartnotification: {
-                if (isNotStarted()) {
-                    showDialog();
-                } else {
-                    stopSmartNoti();
-                }
-            }
-            break;
-        }
-    }
-
-    private void stopSmartNoti() {
-        Log.i(Constants.STATUS, "stopSmartNoti()");
-        stopService(new Intent(MainActivity.this, SmartNotiService.class));
-        stopService(new Intent(MainActivity.this, FocusPeriodService.class));
-        stopService(new Intent(MainActivity.this, BreakPeriodService.class));
-        Utility.deleteStatusEntity();
-        setSmartNotiOffView();
-    }
-
-    @Override
-    public void onSmartNotiStart() {
-        setSmartNotiOnView();
-    }
-
     private void prepareForOtherTimer(String whichTimer) {
-        //TODO: is this supposed to be here?
         if (Utility.isSmartNotiInUse()) {
             switch (whichTimer) {
                 case (Constants.FOCUS_TIMER): {
@@ -177,6 +147,85 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         }
+    }
+
+    /**
+     * LocalBroadcastManager needs to be registered in onStart() and unregistered in onStop()
+     * IntentFilter is used to listen for specific intent action: PERIOD_TIME and SMART_NOTIFICATION_END
+     *
+     * When the broadcast is registered, its status is saved in the database so that we check to see
+     *  if the MainActivity is visible to users
+     *
+     * Because we can't update the UI when the Activity is not visible, so when the Activity is back to visible
+     *  we need to refresh the view to show the correct information
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.PERIOD_TIME);
+        intentFilter.addAction(Constants.SMART_NOTIFICATION_END);
+        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver), intentFilter);
+
+        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null);
+
+        refreshView();
+    }
+
+    /**
+     * LocalBroadcastManager needs to be registered in onStart() and unregistered in onStop()
+     *
+     * When the broadcast is unregistered, its status is saved in the database so that we check to see
+     *  if the MainActivity is invisible to users
+     */
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
+        super.onStop();
+    }
+
+    /**
+     * Since once the app is started and smart notification ends, there are no entry of
+     * SMART_NOTIFICATION and SMART_NOTIFICATION_UNBOUNDED in the Database, we can use that to check
+     * whether the button is clicked to disable to to enable Smart Notification
+     *
+     *
+     * @param view
+     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.activity_main_fab_smartnotification: {
+                if (isNotStarted()) {
+                    showSmartNotiDialog();
+                } else {
+                    stopSmartNoti();
+                }
+            }
+            break;
+        }
+    }
+
+    /**
+     * When a stop signal is given, the Smart Notification needs to stop, therefore the 3 Services are called to stop
+     * if a Service is not started, calling a stopService to it, will do nothing to it
+     *
+     * Once it's finished, we clear all the status, which store the status of each timer, and the PERVIOUS_TIMER
+     * And also, update the view accordingly
+     */
+    private void stopSmartNoti() {
+        Log.i(Constants.STATUS, "stopSmartNoti()");
+        stopService(new Intent(MainActivity.this, SmartNotiService.class));
+        stopService(new Intent(MainActivity.this, FocusPeriodService.class));
+        stopService(new Intent(MainActivity.this, BreakPeriodService.class));
+        Utility.deleteStatusEntity();
+        setSmartNotiOffView();
+    }
+
+    @Override
+    public void onSmartNotiStart() {
+        setSmartNotiOnView();
     }
 
     private void toggleFeedbackVis(boolean visible) {
@@ -197,6 +246,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * @return true means there are no service running at the moment or started even started yet
+     */
     private boolean isNotStarted() {
         Status smartNotiStatus = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION);
         Status smartNotiUnbounded = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED);
@@ -215,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 nextBreakInTV.setText(getResources().getString(R.string.next_focus_in));
             }
         } else {
-            setSmartNotiOffView();
+            stopSmartNoti();
         }
         bottomSheet.update();
     }
@@ -238,12 +290,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getPermission() {
-        if (!Utility.isNotificationListenEnable(getApplicationContext())) {
+        if (!Utility.isNotificationListenEnabled(getApplicationContext())) {
             //TODO: show dialog asking to go to notification access setting
             Intent intent = new Intent(Constants.NOTIFICATION_ACCESS_SETTING);
             startActivity(intent);
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(bottomSheet.isBottomSheetCollapsed()) {
+            super.onBackPressed();
+        }else{
+            bottomSheet.collapseBottomSheet();
+        }
+    }
 }

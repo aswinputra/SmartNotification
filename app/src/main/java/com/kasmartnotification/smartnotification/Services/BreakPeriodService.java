@@ -75,7 +75,7 @@ public class BreakPeriodService extends Service {
      * @param time
      */
     private void updateTimerView(String time){
-        Intent intent = new Intent(Constants.UPDATE_PERIOD_TIME);
+        Intent intent = new Intent(Constants.PERIOD_TIME);
         if(time != null)
             intent.putExtra(Constants.REMAINING_TIME, time);
         broadcastManager.sendBroadcast(intent);

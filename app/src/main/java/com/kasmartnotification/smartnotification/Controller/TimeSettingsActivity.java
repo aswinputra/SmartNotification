@@ -17,7 +17,6 @@ public class TimeSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_time_settings);
         Toolbar toolbar = findViewById(R.id.activity_time_settings_toolbar);
         setSupportActionBar(toolbar);
-
     }
 
 }

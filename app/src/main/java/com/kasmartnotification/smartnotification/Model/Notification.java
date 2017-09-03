@@ -25,9 +25,9 @@ public class Notification extends SugarRecord{
     }
 
     public Notification(String pkgName, String title, String message, long postedTime,  Icon icon) {
-        this.pkgName = pkgName;
-        this.title = title;
-        this.message = message;
+        this.pkgName = pkgName  == null ? "": pkgName;
+        this.title = title == null ? "": title;
+        this.message = message  == null ? "": message;
         this.postedTime = postedTime;
         determineImportance();
         appIcon = icon;
@@ -114,10 +114,12 @@ public class Notification extends SugarRecord{
     }
 
     private boolean determinedImportant(String message){
+        //TODO: we will need a database for this
         return message.toLowerCase().contains("urgent");
     }
 
     private boolean isTitleValid(){
+        //TODO: we might need a database for this or a list
         String title = this.title.toLowerCase();
         return !title.isEmpty() &&
                 !(title.contains("null")||
@@ -126,6 +128,7 @@ public class Notification extends SugarRecord{
     }
 
     private boolean isMessageValid(){
+        //TODO: we might need a database for this or a list
         String message = this.message.toLowerCase();
         return !message.isEmpty() &&
                 !message.equals("null");

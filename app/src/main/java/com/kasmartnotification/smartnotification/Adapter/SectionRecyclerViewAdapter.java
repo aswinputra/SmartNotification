@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.kasmartnotification.smartnotification.Model.Section;
 
+/**
+ * Followed this example https://gist.github.com/gabrielemariotti/4c189fb1124df4556058
+ */
 public class SectionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context mContext;
@@ -115,7 +118,6 @@ public class SectionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             mSections.append(section.getSectionedPosition(), section);
             ++offset;
         }
-
         notifyDataSetChanged();
     }
 
