@@ -15,6 +15,7 @@ import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartList
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
+import com.kasmartnotification.smartnotification.Services.NotificationListener;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
 
 import java.util.Calendar;
@@ -94,6 +95,7 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
                     context.startService(new Intent(context, SmartNotiService.class));
                 }
                 context.startService(new Intent(context, FocusPeriodService.class));
+                context.startService(new Intent(context, NotificationListener.class));
                 smartNotiStartListener.onSmartNotiStart();
                 dismiss();
             }
@@ -133,8 +135,9 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
     }
 
     private void saveSmartNotiEndTime(){
-        Calendar endTime = Calendar.getInstance();
-        endTime.add(Calendar.MINUTE, 3);
+        Calendar endTime = Utility.getAddedCalendar(smartNotiHour);
+//        Calendar endTime = Calendar.getInstance();
+//        endTime.add(Calendar.MINUTE, 3);
         Utility.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);
     }
 }

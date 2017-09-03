@@ -136,7 +136,7 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
                 toggleClearAllVisibility(Notifications.getInstance());
             }
         }catch(Exception e){
-            Log.i(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getMessage());
         }
     }
 

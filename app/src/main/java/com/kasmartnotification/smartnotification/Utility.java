@@ -25,6 +25,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Utility {
 
+    public static long getSecondFromMillis(long millis){
+        return TimeUnit.MILLISECONDS.toSeconds(millis);
+    }
+
     public static long getMinFromMillis(long millis) {
         return TimeUnit.MILLISECONDS.toMinutes(millis) + 1;
     }
@@ -127,10 +131,7 @@ public class Utility {
 
     public static boolean isBroadcastReceiverRegistered() {
         Status registeredLocalBroadcast = Utility.findFromDB(Status.class, Constants.LOCAL_BROADCAST_REGISTERED);
-        if (registeredLocalBroadcast != null) {
-            return registeredLocalBroadcast.isRunning();
-        }
-        return false;
+        return registeredLocalBroadcast != null && registeredLocalBroadcast.isRunning();
     }
 
     public static boolean isNotificationListenEnable(Context context) {

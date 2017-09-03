@@ -44,7 +44,7 @@ public class SmartNotiService extends Service {
             timer = new CountDownTimer(millisInFuture, Constants.COUNTDOWN_INTERVAL) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    Log.i(Constants.SERVICE_LOG, "Smart Noti onTick: " + Utility.getMinFromMillis(millisUntilFinished));
+                    Log.i(Constants.SERVICE_LOG, "Smart Noti onTick: " + Utility.getSecondFromMillis(millisUntilFinished));
                 }
 
                 @Override
@@ -67,8 +67,12 @@ public class SmartNotiService extends Service {
     @Override
     public void onDestroy() {
         Log.i(Constants.SERVICE_LOG, "Smart Noti Timer Service is destroyed");
-        timer.onFinish();
-        timer.cancel();
+        try {
+            timer.onFinish();
+            timer.cancel();
+        }catch (Exception e){
+            Log.e(Constants.EXCEPTION, e.getMessage());
+        }
         stopSelf();
         super.onDestroy();
     }

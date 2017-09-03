@@ -37,7 +37,7 @@ public class BreakPeriodService extends Service {
          timer = new CountDownTimer(60000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + Utility.getMinFromMillis(millisUntilFinished));
+                Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + Utility.getSecondFromMillis(millisUntilFinished));
                 updateTimerView(Utility.getMinutesStr(millisUntilFinished));
             }
 

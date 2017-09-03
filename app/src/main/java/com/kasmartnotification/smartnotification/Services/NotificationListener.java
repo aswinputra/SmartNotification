@@ -22,6 +22,7 @@ public class NotificationListener extends NotificationListenerService{
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
 
+        //TODO: MUST change this to check for FOCUS TIMER is running instead
         if(Utility.isSmartNotiInUse()) {
 
             Notification notification = sbn.getNotification();

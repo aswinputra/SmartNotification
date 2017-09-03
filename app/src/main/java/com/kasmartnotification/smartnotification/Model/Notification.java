@@ -37,10 +37,6 @@ public class Notification extends SugarRecord{
         return pkgName;
     }
 
-    public void setPkgName(String pkgName) {
-        this.pkgName = pkgName;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -74,7 +70,7 @@ public class Notification extends SugarRecord{
                     this.message.equals(notification.message) &&
                     this.important == notification.important;
         } catch (Exception e) {
-            Log.i(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getMessage());
             is = true;
         }
         return is;
@@ -82,18 +78,18 @@ public class Notification extends SugarRecord{
 
     private void determineImportance() {
         try {
-            if (message.contains("urgent")) {
+            if (determinedImportant(message)) {
                 setImportant(true);
             } else {
                 setImportant(false);
             }
         } catch (Exception e) {
-            Log.i(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getMessage());
             setImportant(false);
         }
     }
 
-    public boolean isBlackListed() {
+    private boolean isBlackListed() {
         try {
             List<BlackListPackage> blackListPackageList = BlackListPackage.listAll(BlackListPackage.class);
             for (BlackListPackage bLPackage : blackListPackageList) {
@@ -108,10 +104,30 @@ public class Notification extends SugarRecord{
     }
 
     public boolean isValid(){
-        return !title.isEmpty() && !message.isEmpty() && !isBlackListed();
+        return isTitleValid() &&
+                isMessageValid() &&
+                !isBlackListed();
     }
 
     public Icon getAppIcon() {
         return appIcon;
+    }
+
+    private boolean determinedImportant(String message){
+        return message.toLowerCase().contains("urgent");
+    }
+
+    private boolean isTitleValid(){
+        String title = this.title.toLowerCase();
+        return !title.isEmpty() &&
+                !(title.contains("null")||
+                        title.contains("chat heads active")
+                );
+    }
+
+    private boolean isMessageValid(){
+        String message = this.message.toLowerCase();
+        return !message.isEmpty() &&
+                !message.equals("null");
     }
 }

@@ -37,7 +37,7 @@ public class FocusPeriodService extends Service {
         timer = new CountDownTimer(120000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "FocusPeriod onTick: " + Utility.getMinFromMillis(millisUntilFinished));
+                Log.i(Constants.SERVICE_LOG, "FocusPeriod onTick: " + Utility.getSecondFromMillis(millisUntilFinished));
                 updateTimerView(Utility.getMinutesStr(millisUntilFinished));
             }
 
