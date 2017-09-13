@@ -2,7 +2,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="activity_margin">16dp</dimen>
     <dimen name="noti_top_padding">12dp</dimen>
-    <dimen name="app_icon_hint">24dp</dimen>
+    <dimen name="app_icon_hint">20dp</dimen>
 
     <dimen name="smart_notification_top_margin">50dp</dimen>
     <dimen name="smart_notification_height">200dp</dimen>
@@ -12,6 +12,7 @@
     <dimen name="hint_text_size">16sp</dimen>
     <dimen name="noti_minute_text_size">14sp</dimen>
     <dimen name="title_text_size">30sp</dimen>
+    <dimen name="italic_word_size">28sp</dimen>
 
     <dimen name="text_list_title">16sp</dimen>
 

@@ -1,5 +1,6 @@
 package com.kasmartnotification.smartnotification.Model;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.util.Log;
 
@@ -20,17 +21,21 @@ public class Notification extends SugarRecord{
     private boolean important;
     private String importance;
     private Icon appIcon;
+    private Icon largeIcon;
+    private int color;
 
     public Notification() {
     }
 
-    public Notification(String pkgName, String title, String message, long postedTime,  Icon icon) {
+    public Notification(String pkgName, String title, String message, long postedTime,  Icon smallIcon, Icon largeIcon, int color) {
         this.pkgName = pkgName  == null ? "": pkgName;
         this.title = title == null ? "": title;
         this.message = message  == null ? "": message;
         this.postedTime = postedTime;
         determineImportance();
-        appIcon = icon;
+        appIcon = smallIcon;
+        this.largeIcon = largeIcon;
+        this.color = color;
     }
 
     public String getPkgName() {
@@ -60,6 +65,14 @@ public class Notification extends SugarRecord{
     private void setImportant(boolean important) {
         this.important = important;
         importance = important ? "Important" : "Unimportant";
+    }
+
+    public Icon getLargeIcon() {
+        return largeIcon;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public boolean is(Notification notification) {
@@ -113,7 +126,7 @@ public class Notification extends SugarRecord{
         return appIcon;
     }
 
-    private boolean determinedImportant(String message){
+    public static boolean determinedImportant(String message){
         //TODO: we will need a database for this
         return message.toLowerCase().contains("urgent");
     }

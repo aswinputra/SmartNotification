@@ -14,7 +14,7 @@ public class Constants {
     public static final String ZERO = "0";
 
     public static final String SERVICE_LOG = "SERVICE_LOG";
-    public static final String STATUS = "STATUS";
+    public static final String STATUS_LOG = "STATUS_LOG";
     public static final String NOTI_LISTENER_LOG = "NOTI_LISTENER_LOG";
     public static final String MISC = "MISC_LOG";
     public static final String EXCEPTION = "EXCEPTION_LOG";
@@ -35,6 +35,14 @@ public class Constants {
     public static final String NOTIFICATION_TITLE = "android.title";
     public static final String NOTIFICATION_MESSAGE = "android.text";
 
-    public static final int BOTTOM_SHEET_COLLAPSE_HEIGHT = 700;
+    public static final int BOTTOM_SHEET_COLLAPSE_HEIGHT = 750;
 
+    public static final String Important = "Important";
+
+    public static final String IMPORTANT = "IMPORTANT";
+    public static final String STATUS = "STATUS";
+    public static final int NOTIFICATION_ID = 766;
+    public static final int STATUS_NOTIFICATION_ID = 765;
+
+    public static String PACKAGE_NAME;
 }

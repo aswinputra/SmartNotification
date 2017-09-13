@@ -3,6 +3,9 @@ package com.kasmartnotification.smartnotification.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.ImageDecoder;
 import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.R;
@@ -55,10 +59,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Notification notification = mNotifications.get(position);
         holder.titleTV.setText(notification.getTitle());
         holder.messageTV.setText(notification.getMessage());
-        Icon icon = notification.getAppIcon();
-        if (icon != null) {
-            icon.setTint(ContextCompat.getColor(mContext, R.color.colorBlackSecondaryText));
-            holder.appIconTV.setImageIcon(icon);
+        Icon smallIcon = notification.getAppIcon();
+        Icon lrgIcon = notification.getLargeIcon();
+        int color = notification.getColor();
+        if (smallIcon != null) {
+            smallIcon.setTint(color);
+            holder.appIconTV.setImageIcon(smallIcon);
+        }
+        if (lrgIcon != null) {
+            holder.imageView.setImageDrawable(lrgIcon.loadDrawable(mContext));
+        }else {
+            if (smallIcon != null) {
+                Drawable drawable = smallIcon.loadDrawable(mContext);
+                Bitmap bitmap = ImageDecoder.convertDrawableToBitmap(drawable);
+                bitmap = ImageDecoder.changeImageColor(bitmap, color);
+                holder.imageView.setImageBitmap(bitmap);
+            }
+        }
+        if(notification.isImportant()){
+            holder.imageView.setBorderColor(ContextCompat.getColor(mContext, R.color.colorRed500));
+        }else{
+            holder.imageView.setBorderColor(ContextCompat.getColor(mContext, R.color.colorGrey));
         }
         setTime(holder.minuteTV, notification.getPostedTime());
     }

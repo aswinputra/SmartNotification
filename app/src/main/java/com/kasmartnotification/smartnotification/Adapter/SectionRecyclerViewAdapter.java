@@ -1,6 +1,7 @@
 package com.kasmartnotification.smartnotification.Adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Section;
+import com.kasmartnotification.smartnotification.R;
 
 /**
  * Followed this example https://gist.github.com/gabrielemariotti/4c189fb1124df4556058
@@ -85,7 +88,13 @@ public class SectionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
+            if(mSections.get(position).getTitle().equals(Constants.Important)){
+                ((SectionViewHolder) sectionViewHolder).title.setTextColor(ContextCompat.getColor(mContext, R.color.colorRed500));
+            }else{
+                ((SectionViewHolder) sectionViewHolder).title.setTextColor(ContextCompat.getColor(mContext, R.color.colorGrey));
+            }
             ((SectionViewHolder) sectionViewHolder).title.setText(mSections.get(position).getTitle());
+
         } else {
             mBaseAdapter.onBindViewHolder(sectionViewHolder, sectionedPositionToPosition(position));
         }

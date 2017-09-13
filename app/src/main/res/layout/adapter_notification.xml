@@ -10,20 +10,20 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/adapter_notification_circle_imageview"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/thumbnail"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:civ_border_color="@android:color/white"
         app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/adapter_notification_title"
         style="@style/TextRadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:maxLines="1"
         android:paddingEnd="@dimen/noti_top_padding"
         android:paddingStart="@dimen/noti_top_padding"
@@ -60,7 +60,6 @@
         android:layout_height="@dimen/app_icon_hint"
         android:contentDescription="@string/app_icon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintEnd_toEndOf="@+id/adapter_noti_minute" />
 
 </android.support.constraint.ConstraintLayout>

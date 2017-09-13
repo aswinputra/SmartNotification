@@ -38,6 +38,7 @@ public class SmartNotiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(Constants.STATUS_LOG, "Smart Noti Service: onStartCommand");
         Setting endTime = Utility.findFromDB(Setting.class, Constants.SMART_NOTIFICATION_END_TIME);
         if(endTime!=null) {
             long millisInFuture = Utility.getMillisDiff(endTime.getCalendar());
@@ -66,7 +67,7 @@ public class SmartNotiService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(Constants.SERVICE_LOG, "Smart Noti Timer Service is destroyed");
+        Log.i(Constants.STATUS_LOG, "Smart Noti Service is destroyed");
         try {
             timer.onFinish();
             timer.cancel();
@@ -84,6 +85,7 @@ public class SmartNotiService extends Service {
     private void sendEndFlag(){
         Intent intent = new Intent(Constants.SMART_NOTIFICATION_END);
         broadcastManager.sendBroadcast(intent);
+        stopSelf();
     }
 
 }

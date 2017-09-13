@@ -42,7 +42,7 @@
         android:paddingStart="@dimen/activity_margin"
         android:textAlignment="textEnd"
         android:textColor="@android:color/background_light"
-        android:textSize="28sp"
+        android:textSize="@dimen/italic_word_size"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_main_next_break_in" />
@@ -89,8 +89,11 @@
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/activity_margin"
         android:paddingStart="@dimen/activity_margin"
-        android:textSize="28sp"
+        android:textSize="@dimen/italic_word_size"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_main_until" />
+
+
+
 </android.support.constraint.ConstraintLayout>

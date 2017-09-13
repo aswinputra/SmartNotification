@@ -34,6 +34,7 @@ public class FocusPeriodService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(Constants.STATUS_LOG, "Focus Period Service: onStartCommand");
         timer = new CountDownTimer(120000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -43,7 +44,7 @@ public class FocusPeriodService extends Service {
 
             @Override
             public void onFinish() {
-                Log.i(Constants.SERVICE_LOG, "FocusPeriod Timer is finished");
+                Log.i(Constants.STATUS_LOG, "FocusPeriod Timer is finished");
                 Utility.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, false, null, null);
                 updateTimerView(Constants.END_TIMER);
                 if(!Utility.isBroadcastReceiverRegistered()){
@@ -60,7 +61,7 @@ public class FocusPeriodService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(Constants.SERVICE_LOG, "Focus Period Service is destroyed");
+        Log.i(Constants.STATUS_LOG, "Focus Period Service is destroyed");
         timer.onFinish();
         timer.cancel();
         stopSelf();
@@ -86,4 +87,6 @@ public class FocusPeriodService extends Service {
             startService(intent);
         }
     }
+
+
 }

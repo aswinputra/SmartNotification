@@ -1,11 +1,16 @@
 package com.kasmartnotification.smartnotification.Controller;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,10 +27,11 @@ import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartList
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.BreakPeriodService;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
+import com.kasmartnotification.smartnotification.Services.NotificationListener;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
 import com.kasmartnotification.smartnotification.Utility;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener {
 
     private FloatingActionButton smartNotiFab;
     private BroadcastReceiver broadcastReceiver;
@@ -43,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
+
+        Constants.PACKAGE_NAME = getPackageName();
 
         nextBreakInTV = findViewById(R.id.activity_main_next_break_in);
         timerTV = findViewById(R.id.activity_main_focus_period_timer);
@@ -92,14 +100,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * This functions sets up the BroadcastReceiver to receive broadcast data from the Services:
      * BreakPeriodService, FocusPeriodService, and SmartNotiService
-     *
+     * <p>
      * PERIOD_TIME is a signal from Break and Focus Period Services to inform to update the time
      * on this UI thread
-     *  When it's OnTick of the Timer is called in the Service, it will send REMAINING_TIME as a string to display
-     *  But when it's OnFinish is called, it will send END_TIMER to signal that the timer from a Service is finished
-     *  and therefore needs to call the alternative Service, which needs the status flag of the PREVIOUS_TIMER
-     *      so when the previous timer is a break timer, the focus timer will be called and vice versa
-     *
+     * When it's OnTick of the Timer is called in the Service, it will send REMAINING_TIME as a string to display
+     * But when it's OnFinish is called, it will send END_TIMER to signal that the timer from a Service is finished
+     * and therefore needs to call the alternative Service, which needs the status flag of the PREVIOUS_TIMER
+     * so when the previous timer is a break timer, the focus timer will be called and vice versa
+     * <p>
      * SMART_NOTIFICATION_END is a signal from SmartNotiService to notify that the Smart Notification has ended
      * so that the view can be updated accordingly
      */
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (intent.getAction().equals(Constants.SMART_NOTIFICATION_END)) {
                         stopSmartNoti();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     Log.e(Constants.EXCEPTION, e.getMessage());
                 }
             }
@@ -152,12 +160,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * LocalBroadcastManager needs to be registered in onStart() and unregistered in onStop()
      * IntentFilter is used to listen for specific intent action: PERIOD_TIME and SMART_NOTIFICATION_END
-     *
+     * <p>
      * When the broadcast is registered, its status is saved in the database so that we check to see
-     *  if the MainActivity is visible to users
-     *
+     * if the MainActivity is visible to users
+     * <p>
      * Because we can't update the UI when the Activity is not visible, so when the Activity is back to visible
-     *  we need to refresh the view to show the correct information
+     * we need to refresh the view to show the correct information
      */
     @Override
     protected void onStart() {
@@ -174,9 +182,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * LocalBroadcastManager needs to be registered in onStart() and unregistered in onStop()
-     *
+     * <p>
      * When the broadcast is unregistered, its status is saved in the database so that we check to see
-     *  if the MainActivity is invisible to users
+     * if the MainActivity is invisible to users
      */
     @Override
     protected void onStop() {
@@ -189,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Since once the app is started and smart notification ends, there are no entry of
      * SMART_NOTIFICATION and SMART_NOTIFICATION_UNBOUNDED in the Database, we can use that to check
      * whether the button is clicked to disable to to enable Smart Notification
-     *
      *
      * @param view
      */
@@ -210,21 +217,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * When a stop signal is given, the Smart Notification needs to stop, therefore the 3 Services are called to stop
      * if a Service is not started, calling a stopService to it, will do nothing to it
-     *
+     * <p>
      * Once it's finished, we clear all the status, which store the status of each timer, and the PERVIOUS_TIMER
      * And also, update the view accordingly
      */
     private void stopSmartNoti() {
-        Log.i(Constants.STATUS, "stopSmartNoti()");
+        Log.i(Constants.STATUS_LOG, "stopSmartNoti()");
         stopService(new Intent(MainActivity.this, SmartNotiService.class));
         stopService(new Intent(MainActivity.this, FocusPeriodService.class));
         stopService(new Intent(MainActivity.this, BreakPeriodService.class));
+        stopService(new Intent(MainActivity.this, NotificationListener.class));
         Utility.deleteStatusEntity();
         setSmartNotiOffView();
     }
 
     @Override
     public void onSmartNotiStart() {
+        notifySmartNoti();
         setSmartNotiOnView();
     }
 
@@ -287,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setSmartNotiOffView() {
         toggleFeedbackVis(false);
         smartNotiFab.setImageResource(R.drawable.ic_noti);
+        cancelSmartNotiNotification();
     }
 
     private void getPermission() {
@@ -299,10 +309,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if(bottomSheet.isBottomSheetCollapsed()) {
+        if (bottomSheet.isBottomSheetCollapsed()) {
             super.onBackPressed();
-        }else{
+        } else {
             bottomSheet.collapseBottomSheet();
+        }
+    }
+
+    private void notifySmartNoti(){
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(mainActivityIntent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        int color = ContextCompat.getColor(this, R.color.colorPrimary);
+
+        NotificationCompat.Builder importantNoti =  new NotificationCompat.Builder(this, Constants.STATUS)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle("Smart Notification is running...")
+                .setContentInfo("testing")
+                .setContentText("Tap to open app")
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .setColor(color)
+                .setColorized(true);
+
+        if (notificationManager != null) {
+            notificationManager.notify(Constants.STATUS_NOTIFICATION_ID, importantNoti.build());
+        }
+    }
+
+    private void cancelSmartNotiNotification(){
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (notificationManager != null) {
+            notificationManager.cancel(Constants.STATUS_NOTIFICATION_ID);
         }
     }
 }

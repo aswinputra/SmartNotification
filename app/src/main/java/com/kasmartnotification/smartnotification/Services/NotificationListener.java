@@ -1,6 +1,5 @@
 package com.kasmartnotification.smartnotification.Services;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
@@ -10,50 +9,78 @@ import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Notifications;
-import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Utility;
 
 /**
  * Created by kiman on 1/9/17.
  */
 
-public class NotificationListener extends NotificationListenerService{
+public class NotificationListener extends NotificationListenerService {
+
+    @Override
+    public void onListenerConnected() {
+        super.onListenerConnected();
+        Log.i(Constants.STATUS_LOG, "Notification Lister: connected");
+    }
+
+    @Override
+    public void onListenerDisconnected() {
+        super.onListenerDisconnected();
+        Log.i(Constants.STATUS_LOG, "Notification Lister: disconnected");
+    }
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
 
         //TODO: MUST change this to check for FOCUS TIMER is running instead
-        if(Utility.isSmartNotiInUse()) {
-
-            Notification notification = sbn.getNotification();
-            String details = sbn.getPackageName() + "\n";
-            Bundle extras = notification.extras;
+        if (Utility.isSmartNotiInUse()) {
+            Notification incomingNoti = sbn.getNotification();
+            String details = "package: " + sbn.getPackageName() + "\n";
+            Bundle extras = incomingNoti.extras;
             String title = extras.getString(Constants.NOTIFICATION_TITLE);
             CharSequence message = extras.getCharSequence(Constants.NOTIFICATION_MESSAGE);
 
-            Icon appIcon = notification.getSmallIcon();
+            details += "sbn.getKey(): " + sbn.getKey() + "\n";
 
-            details += "\n" + title;
+            Icon appIcon = incomingNoti.getSmallIcon();
+            Icon largeIcon = incomingNoti.getLargeIcon();
+            int color = incomingNoti.color;
+
+            details += "title: " + title + "\n";
             if (message != null) {
-                details += "\n" + message;
+                details += "message: " + message;
             }
             Log.i(Constants.NOTI_LISTENER_LOG, details);
 
             Notifications notifications = Notifications.getInstance();
 
-            com.kasmartnotification.smartnotification.Model.Notification myNoti = new com.kasmartnotification.smartnotification.Model.Notification(
-                    sbn.getPackageName(), title, String.valueOf(message), sbn.getPostTime(), appIcon);
+            com.kasmartnotification.smartnotification.Model.Notification newNoti = new com.kasmartnotification.smartnotification.Model.Notification(
+                    sbn.getPackageName(),
+                    title,
+                    String.valueOf(message),
+                    sbn.getPostTime(),
+                    appIcon,
+                    largeIcon,
+                    color);
 
-            if (myNoti.isValid()) {
-                notifications.add(myNoti);
+            if (newNoti.isValid()) {
+                notifications.add(newNoti);
             }
 
-            cancelNotification(sbn.getKey());
+            if(!sbn.getPackageName().equals(Constants.PACKAGE_NAME)) {
+                cancelNotification(sbn.getKey());
+            }
         }
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(Constants.STATUS_LOG, "Notification Lister: destroyed");
+        super.onDestroy();
     }
 }

@@ -5,4 +5,9 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorBlackSecondaryText">#8A000000</color>
+
+    <color name="colorRed500">#F44336</color>
+    <color name="colorGrey">#aaa</color>
+
+    <color name="statusbar_color">@color/colorPrimaryDark</color>
 </resources>

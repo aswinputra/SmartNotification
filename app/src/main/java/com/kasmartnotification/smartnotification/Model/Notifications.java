@@ -59,7 +59,6 @@ public class Notifications {
                 listener.onNotiAdded(notification);
             }
         }
-
     }
 
     private boolean has(Notification notification) {

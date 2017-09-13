@@ -34,6 +34,7 @@ public class BreakPeriodService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(Constants.STATUS_LOG, "Break Period Service: onStartCommand");
          timer = new CountDownTimer(60000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -43,7 +44,7 @@ public class BreakPeriodService extends Service {
 
             @Override
             public void onFinish() {
-                Log.i(Constants.SERVICE_LOG, "BreakPeriod Timer is finished");
+                Log.i(Constants.STATUS_LOG, "BreakPeriod Timer is finished");
 
                 Utility.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, false, null, null);
 
@@ -62,7 +63,7 @@ public class BreakPeriodService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i(Constants.SERVICE_LOG, "Break Period Service is destroyed");
+        Log.i(Constants.STATUS_LOG, "Break Period Service is destroyed");
         timer.onFinish();
         timer.cancel();
         stopSelf();
