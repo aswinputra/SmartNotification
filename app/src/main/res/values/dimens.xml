@@ -16,5 +16,9 @@
     <dimen name="text_list_title">16sp</dimen>
 
     <dimen name="elevation_height">5dp</dimen>
+    <dimen name="activity_settings_linear_layout_paddingTopBottom">20dp</dimen>
+    <dimen name="activity_settings_time_margin_start">20dp</dimen>
+    <dimen name="activity_settings_time_title_size">17sp</dimen>
+    <dimen name="margin_top_function">10dp</dimen>
 
 </resources>

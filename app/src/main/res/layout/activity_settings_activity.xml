@@ -1,10 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kasmartnotification.smartnotification.SettingsActivity">
-
+    tools:context="com.kasmartnotification.smartnotification.Controller.SettingsActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_settings_activity_noti_during_physical_activity_linear_layout"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintTop_toBottomOf="parent"
+        android:background="@drawable/linear_layout_border"
+        android:focusableInTouchMode="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="80">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextRadioButton"
+                android:text="@string/notification_physical_activity"
+                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+                android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+                android:layout_marginTop="@dimen/activity_settings_linear_layout_paddingTopBottom"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+                android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+                android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
+                android:text="@string/noti_physical_activity_descriptions" />
+        </LinearLayout>
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:layout_weight="20"
+            android:layout_gravity="center"
+            android:id="@+id/activity_settings_activity_noti_during_physical_activity_switch"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_settings_activity_noti_during_phone_usage_linear_layout"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintTop_toBottomOf="@id/activity_settings_activity_noti_during_physical_activity_linear_layout">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="80">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextRadioButton"
+                android:text="@string/notification_during_phone_usage"
+                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+                android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+                android:layout_marginTop="@dimen/activity_settings_linear_layout_paddingTopBottom"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+                android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+                android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
+                android:text="@string/notification_during_phone_usage_descriptions" />
+        </LinearLayout>
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:layout_weight="20"
+            android:layout_gravity="center"
+            android:id="@+id/activity_settings_activity_noti_during_phone_usage_switch"/>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

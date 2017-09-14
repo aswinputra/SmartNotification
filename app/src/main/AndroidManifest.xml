@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kasmartnotification.smartnotification">
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,23 +14,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon"
-        android:name="com.orm.SugarApp">
-
+        tools:replace="android:icon">
         <service android:name=".Services.SmartNotiService" />
         <service android:name=".Services.FocusPeriodService" />
         <service android:name=".Services.BreakPeriodService" />
-        <service android:name=".Services.NotificationListener"
+        <service
+            android:name=".Services.NotificationListener"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
 
-        <meta-data android:name="DATABASE" android:value="kasmart_notifiation.db" />
-        <meta-data android:name="VERSION" android:value="5" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.kasmartnotification.smartnotification" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="kasmart_notifiation.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="5" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.kasmartnotification.smartnotification" />
 
         <activity
             android:name=".Controller.MainActivity"
@@ -36,14 +46,51 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".Controller.TimeSettingsActivity"
-            android:label="@string/title_activity_time_settings"
+            android:name=".Controller.Settings"
+            android:label="@string/action_settings"
+            android:parentActivityName=".Controller.MainActivity" />
+        <activity
+            android:name=".Controller.SettingsTime"
+            android:label="@string/time"
+            android:parentActivityName=".Controller.Settings" />
+        <activity
+            android:name=".Controller.SettingsLocation"
+            android:label="@string/location"
+            android:parentActivityName=".Controller.Settings" />
+        <activity
+            android:name=".Controller.SettingsPlaces"
+            android:label="@string/places"
+            android:parentActivityName=".Controller.SettingsLocation"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Controller.SettingsReminderMessages"
+            android:label="@string/reminder_messages"
+            android:parentActivityName=".Controller.SettingsLocation"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Controller.SettingsKeywordsResponse"
+            android:label="@string/keywords"
+            android:parentActivityName=".Controller.Settings" />
+        <activity
+            android:name=".Controller.SettingsImportantSenders"
+            android:label="@string/important_senders"
+            android:parentActivityName=".Controller.SettingsKeywordsResponse"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Controller.SettingsKeywords"
+            android:label="@string/settings_keywords"
+            android:parentActivityName=".Controller.SettingsKeywordsResponse"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Controller.SettingsActivity"
+            android:label="@string/activity"
+            android:parentActivityName=".Controller.Settings"></activity>
+        <activity android:name=".Controller.AddImportantSendersDialog"></activity>
     </application>
 
 </manifest>

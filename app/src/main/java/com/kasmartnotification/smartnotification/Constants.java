@@ -36,5 +36,8 @@ public class Constants {
     public static final String NOTIFICATION_MESSAGE = "android.text";
 
     public static final int BOTTOM_SHEET_COLLAPSE_HEIGHT = 700;
+    public static final int INCREMENT_BY_HOUR = 30;
+    public static final int INCREMENT_BY_MINUTE = 5;
 
+    public static final int PICK_CONTACT = 1;
 }
