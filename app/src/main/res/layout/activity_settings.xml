@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.kasmartnotification.smartnotification.Controller.TimeSettingsActivity"
-    tools:showIn="@layout/activity_time_settings">
-
-
+    tools:context="com.kasmartnotification.smartnotification.Settings">
 
 </android.support.constraint.ConstraintLayout>
