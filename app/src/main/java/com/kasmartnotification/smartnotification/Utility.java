@@ -6,7 +6,10 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.kasmartnotification.smartnotification.Controller.SettingsKeywords;
 import com.kasmartnotification.smartnotification.Model.BlackListPackage;
+import com.kasmartnotification.smartnotification.Model.ImportantSender;
+import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.Model.Section;
 import com.kasmartnotification.smartnotification.Model.Setting;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -185,5 +189,34 @@ public class Utility {
         } else {
             throw new NullPointerException("Argument notifications is null");
         }
+    }
+
+    public static <T> ArrayList<String> getNamesList(List<T> lists){
+        ArrayList<String> names = new ArrayList<>();
+        if (lists!=null &&lists.size()>0){
+            if (lists.size()>=4){
+                if (lists.get(0) instanceof Keyword){
+                    for(int i = 0; i<4; i++){
+                        names.add(((Keyword) lists.get(i)).getName());
+                    }
+                }else if(lists.get(0) instanceof ImportantSender){
+                    for(int i = 0; i<4; i++){
+                        names.add(((ImportantSender) lists.get(i)).getName());
+                    }
+                }
+            }else{
+                if (lists.get(0) instanceof Keyword){
+                    for(int i = 0; i<lists.size(); i++){
+                        names.add(((Keyword) lists.get(i)).getName());
+                    }
+                }else if(lists.get(0) instanceof ImportantSender){
+                    for(int i = 0; i<lists.size(); i++){
+                        names.add(((ImportantSender) lists.get(i)).getName());
+                    }
+                }
+            }
+
+        }
+        return names;
     }
 }

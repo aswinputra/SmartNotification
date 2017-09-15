@@ -35,8 +35,6 @@ public class Constants {
     public static final String NOTIFICATION_TITLE = "android.title";
     public static final String NOTIFICATION_MESSAGE = "android.text";
 
-    public static final int BOTTOM_SHEET_COLLAPSE_HEIGHT = 750;
-
     public static final String Important = "Important";
 
     public static final String IMPORTANT = "IMPORTANT";
@@ -45,4 +43,11 @@ public class Constants {
     public static final int STATUS_NOTIFICATION_ID = 765;
 
     public static String PACKAGE_NAME;
+
+    public static final int BOTTOM_SHEET_COLLAPSE_HEIGHT = 700;
+    public static final int INCREMENT_BY_HOUR = 30;
+    public static final int INCREMENT_BY_MINUTE = 5;
+
+    public static final int PICK_CONTACT = 1;
+
 }
