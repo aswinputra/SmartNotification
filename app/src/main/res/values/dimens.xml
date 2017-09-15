@@ -23,5 +23,6 @@
 
     <dimen name="settings_weight_image">15</dimen>
     <dimen name="settings_weight_text_view">85</dimen>
+    <dimen name="activity_settings_keyword_response_margin_start_end">10dp</dimen>
 
 </resources>

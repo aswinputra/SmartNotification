@@ -7,17 +7,29 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Model.ImportantSender;
+import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Utility;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 public class SettingsKeywordsResponse extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout allowImportantSenders, importantSenders;
     private Switch allowImportantSendersSwitch;
+    private TextView importantSendersTextView;
     private LinearLayout allowKeywords, keywords;
     private Switch allowKeywordsSwitch;
+    private TextView keywordsTextView;
     private LinearLayout automaticResponse, replyMessages;
     private Switch automaticResponseSwitch;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +39,15 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         allowImportantSenders = findViewById(R.id.activity_settings_keywords_response_allow_important_senders_linear_layout);
         importantSenders = findViewById(R.id.activity_settings_keywords_response_important_senders_linear_layout);
         allowImportantSendersSwitch = findViewById(R.id.activity_settings_keywords_response_allow_important_senders_switch);
+        importantSendersTextView = findViewById(R.id.activity_settings_keywords_response_important_senders_text_view);
+
+        List<ImportantSender> senders = ImportantSender.listAll(ImportantSender.class);
+
+        if (!senders.isEmpty()){
+            importantSendersTextView.setText(getNames(senders));
+        }else{
+            importantSendersTextView.setText("Add your Important Senders here");
+        }
 
         allowImportantSendersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -42,6 +63,14 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         allowKeywords = findViewById(R.id.activity_settings_keywords_response_allow_keywords_linear_layout);
         keywords = findViewById(R.id.activity_settings_keywords_response_keywords_linear_layout);
         allowKeywordsSwitch = findViewById(R.id.activity_settings_keywords_response_allow_keywords_switch);
+        keywordsTextView = findViewById(R.id.activity_settings_keywords_response_keywords_text_view);
+
+        List<Keyword> keywordsList = Keyword.listAll(Keyword.class);
+        if (!keywordsList.isEmpty()){
+            keywordsTextView.setText(getNames(keywordsList));
+        }else{
+            keywordsTextView.setText("Add your Keywords here");
+        }
 
         allowKeywordsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -113,5 +142,23 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
                 //TODO: automatic response page
                 break;
         }
+    }
+
+    public <T> String getNames(List<T> list){
+        String name = "";
+        int count = 0;
+        for (String names : Utility.getNamesList(list)){
+            if (count <= 3){
+                if (count==Utility.getNamesList(list).size()-1||count==3){
+                    name = name + names;
+                }else{
+                    name = name + names + ", ";
+                }
+            }else if(count == list.size()-1||count==4){
+                name = name + names;
+            }
+            count++;
+        }
+        return name;
     }
 }

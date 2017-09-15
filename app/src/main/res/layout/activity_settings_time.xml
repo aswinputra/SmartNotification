@@ -28,10 +28,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
-                android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+                android:layout_marginStart="@dimen/activity_settings_keyword_response_margin_start_end"
+                android:layout_marginEnd="@dimen/activity_settings_keyword_response_margin_start_end"
                 android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-                android:layout_weight="12">
+                android:layout_weight="10">
                 <TextView
                     android:id="@+id/activity_settings_time_focus_period_time_text_view"
                     android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                 android:paddingBottom="13dp"
                 android:paddingTop="13dp"
                 android:progress="0"
-                android:layout_weight="88"/>
+                android:layout_weight="90"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -83,10 +83,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
-                android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+                android:layout_marginStart="@dimen/activity_settings_keyword_response_margin_start_end"
+                android:layout_marginEnd="@dimen/activity_settings_keyword_response_margin_start_end"
                 android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-                android:layout_weight="12">
+                android:layout_weight="10">
 
                 <TextView
                     android:id="@+id/activity_settings_time_break_duration_time_text_view"
@@ -111,7 +111,7 @@
                 android:paddingBottom="13dp"
                 android:paddingTop="13dp"
                 android:progress="0"
-                android:layout_weight="88"/>
+                android:layout_weight="90"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

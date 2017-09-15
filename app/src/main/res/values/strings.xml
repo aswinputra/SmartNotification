@@ -30,12 +30,12 @@
     <string name="time">Time</string>
     <string name="location">Location</string>
     <string name="activity">Activity</string>
-    <string name="keywords"><![CDATA[Keywords, Sender & response]]></string>
+    <string name="keywords"><![CDATA[Keywords, Senders & response]]></string>
     <string name="focus_period">Focus Period</string>
     <string name="focus_period_test">6</string>
-    <string name="hours">Hours</string>
+    <string name="hours">hours</string>
     <string name="break_duration">Break duration</string>
-    <string name="minute">Mins</string>
+    <string name="minute">mins</string>
     <string name="sleep_mode">Sleep Mode</string>
     <string name="turn_on_smart_notification_at_night">Turn on Smart Notification at night</string>
     <string name="smart_notification_reminders">Smart Notification reminders</string>
