@@ -1,5 +1,6 @@
 package com.kasmartnotification.smartnotification.Adapter;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.graphics.drawable.Icon;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.ImageDecoder;
 import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
+import com.kasmartnotification.smartnotification.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Utility;
 
@@ -126,7 +129,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             if(view == layout) {
                 PackageManager packageManager = mContext.getPackageManager();
                 Intent intent = packageManager.getLaunchIntentForPackage(mNotifications.get(pos).getPkgName());
+
+                //this needs to go first
+                NotificationHelper.cancelNotification(mContext, mNotifications.get(pos).getShortId());
+
                 Notifications.getInstance().remove(mNotifications.get(pos));
+
+
                 mContext.startActivity(intent);
             }
         }

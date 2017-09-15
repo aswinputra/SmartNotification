@@ -18,7 +18,7 @@ public class Constants {
     public static final String NOTI_LISTENER_LOG = "NOTI_LISTENER_LOG";
     public static final String MISC = "MISC_LOG";
     public static final String EXCEPTION = "EXCEPTION_LOG";
-    public static final String TEST = "TEST";
+    public static final String TEST = "TEST_LOG";
 
     public static final String SMART_NOTIFICATION = "SMART_NOTIFICATION";
     public static final String SMART_NOTIFICATION_UNBOUNDED = "SMART_NOTIFICATION_UNBOUNDED";

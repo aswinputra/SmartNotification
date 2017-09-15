@@ -32,8 +32,7 @@ public class NotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
 
-        //TODO: MUST change this to check for FOCUS TIMER is running instead
-        if (Utility.isSmartNotiInUse()) {
+        if (Utility.isFocusTimerOn()) {
             Notification incomingNoti = sbn.getNotification();
             String details = "package: " + sbn.getPackageName() + "\n";
             Bundle extras = incomingNoti.extras;
@@ -75,6 +74,10 @@ public class NotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        //this is used to synchronise the notifications in our bottomsheet and notification bar
+        if(sbn.getPackageName().equals(Constants.PACKAGE_NAME)) {
+            Notifications.getInstance().remove(sbn.getId());
+        }
         super.onNotificationRemoved(sbn);
     }
 

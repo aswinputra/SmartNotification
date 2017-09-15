@@ -78,18 +78,48 @@ public class Notifications {
         return notificationList;
     }
 
-    public void setNotifications(List<Notification> notificationList) {
-        this.notificationList = notificationList;
-    }
-
     public int size() {
         return notificationList.size();
     }
 
+    private Notification getById(int shortId){
+        for(Notification notification: notificationList){
+            if(notification.getShortId() == shortId){
+                return notification;
+            }
+        }
+        return null;
+    }
+
     public void remove(Notification notification) {
-        notificationList.remove(notification);
-        notification.delete();
-        listener.onRemove(notification);
+        Log.d(Constants.TEST,
+                "notifications size before: " + size() + "\n" +
+                        "notification db size before: " + Notification.listAll(Notification.class).size());
+
+        boolean success = notificationList.remove(notification);
+        if(!success){
+            Notification noti = getById(notification.getShortId());
+            if(noti!=null){
+                notificationList.remove(noti);
+                noti.delete();
+                listener.onRemove(noti);
+            }
+        }else {
+            notification.delete();
+            listener.onRemove(notification);
+        }
+
+        Log.d(Constants.TEST,
+                        "notifications size: " + size() + "\n" +
+                        "notification db size: " + Notification.listAll(Notification.class).size());
+    }
+
+    public void remove(int shortId) {
+        Notification notification = Notification.findById(Notification.class, shortId);
+        if (notification != null) {
+            remove(notification);
+        }
+
     }
 
     public void removeAll() {

@@ -72,7 +72,7 @@ public class SmartNotiService extends Service {
             timer.onFinish();
             timer.cancel();
         }catch (Exception e){
-            Log.e(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
         }
         stopSelf();
         super.onDestroy();

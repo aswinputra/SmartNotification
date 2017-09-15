@@ -24,6 +24,7 @@ import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartListener;
+import com.kasmartnotification.smartnotification.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.BreakPeriodService;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         stopSmartNoti();
                     }
                 } catch (Exception e) {
-                    Log.e(Constants.EXCEPTION, e.getMessage());
+                    Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
                 }
             }
         };
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onSmartNotiStart() {
-        notifySmartNoti();
+        NotificationHelper.notifySmartNoti(this);
         setSmartNotiOnView();
     }
 
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setSmartNotiOffView() {
         toggleFeedbackVis(false);
         smartNotiFab.setImageResource(R.drawable.ic_noti);
-        cancelSmartNotiNotification();
+        NotificationHelper.cancelSmartNotiNotification(this);
     }
 
     private void getPermission() {
@@ -313,44 +314,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onBackPressed();
         } else {
             bottomSheet.collapseBottomSheet();
-        }
-    }
-
-    private void notifySmartNoti(){
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntentWithParentStack(mainActivityIntent);
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(
-                0,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        int color = ContextCompat.getColor(this, R.color.colorPrimary);
-
-        NotificationCompat.Builder importantNoti =  new NotificationCompat.Builder(this, Constants.STATUS)
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle("Smart Notification is running...")
-                .setContentInfo("testing")
-                .setContentText("Tap to open app")
-                .setContentIntent(pendingIntent)
-                .setOngoing(true)
-                .setColor(color)
-                .setColorized(true);
-
-        if (notificationManager != null) {
-            notificationManager.notify(Constants.STATUS_NOTIFICATION_ID, importantNoti.build());
-        }
-    }
-
-    private void cancelSmartNotiNotification(){
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (notificationManager != null) {
-            notificationManager.cancel(Constants.STATUS_NOTIFICATION_ID);
         }
     }
 }

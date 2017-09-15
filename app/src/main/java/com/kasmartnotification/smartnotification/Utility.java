@@ -129,6 +129,17 @@ public class Utility {
         return smartNotiStatus != null && smartNotiStatus.isRunning() || smartNotiUnbounded != null;
     }
 
+
+    public static boolean isFocusTimerOn(){
+        Status focusTimerStatus = Utility.findFromDB(Status.class, Constants.FOCUS_TIMER);
+        return focusTimerStatus != null && focusTimerStatus.isRunning();
+    }
+
+    public static boolean isBreakTimerOn(){
+        Status breakTimerStatus = Utility.findFromDB(Status.class, Constants.BREAK_TIMER);
+        return breakTimerStatus != null && breakTimerStatus.isRunning();
+    }
+
     public static boolean isBroadcastReceiverRegistered() {
         Status registeredLocalBroadcast = Utility.findFromDB(Status.class, Constants.LOCAL_BROADCAST_REGISTERED);
         return registeredLocalBroadcast != null && registeredLocalBroadcast.isRunning();

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Status;
+import com.kasmartnotification.smartnotification.NotificationHelper;
 import com.kasmartnotification.smartnotification.Utility;
 
 /**
@@ -35,6 +36,8 @@ public class BreakPeriodService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(Constants.STATUS_LOG, "Break Period Service: onStartCommand");
+        NotificationHelper.notifyAll(this);
+
          timer = new CountDownTimer(60000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {

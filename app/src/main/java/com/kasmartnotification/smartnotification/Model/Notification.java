@@ -83,7 +83,7 @@ public class Notification extends SugarRecord{
                     this.message.equals(notification.message) &&
                     this.important == notification.important;
         } catch (Exception e) {
-            Log.e(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
             is = true;
         }
         return is;
@@ -97,7 +97,7 @@ public class Notification extends SugarRecord{
                 setImportant(false);
             }
         } catch (Exception e) {
-            Log.e(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
             setImportant(false);
         }
     }
@@ -111,7 +111,7 @@ public class Notification extends SugarRecord{
                 }
             }
         } catch (Exception e) {
-            Log.e(Constants.EXCEPTION, e.getMessage());
+            Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
         }
         return false;
     }
@@ -124,6 +124,10 @@ public class Notification extends SugarRecord{
 
     public Icon getAppIcon() {
         return appIcon;
+    }
+
+    public int getShortId(){
+        return getId().intValue();
     }
 
     public static boolean determinedImportant(String message){
