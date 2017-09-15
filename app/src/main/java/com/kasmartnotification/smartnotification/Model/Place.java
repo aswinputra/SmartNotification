@@ -1,10 +1,12 @@
 package com.kasmartnotification.smartnotification.Model;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by aswinhartono on 14/9/17.
  */
 
-public class Place {
+public class Place extends SugarRecord{
     private String name;
     private String address;
 

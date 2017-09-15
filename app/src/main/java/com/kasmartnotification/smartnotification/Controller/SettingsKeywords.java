@@ -3,7 +3,6 @@ package com.kasmartnotification.smartnotification.Controller;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,30 +11,36 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.Adapter.KeywordsAdapter;
+import com.kasmartnotification.smartnotification.AddDialog;
+import com.kasmartnotification.smartnotification.Interfaces.OnDialogAddListener;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SettingsKeywords extends AppCompatActivity {
+public class SettingsKeywords extends AppCompatActivity implements OnDialogAddListener{
 
     private KeywordsAdapter mKeywordsAdapter;
     private RecyclerView KeywordRecyclerView;
     private Keyword mKeyword;
-    private ArrayList<Keyword> mKeywords;
-    private String keyword;
+    private List<Keyword> mKeywords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_keywords);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_keywords_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mKeywords = new ArrayList<>();
+        mKeywords = Keyword.listAll(Keyword.class);
+        if (mKeywords == null) {
+            mKeywords = new ArrayList<>();
+        }
 
         KeywordRecyclerView = findViewById(R.id.activity_settings_keywords_recycler_view);
         mKeywordsAdapter = new KeywordsAdapter(this, mKeywords);
@@ -46,39 +51,41 @@ public class SettingsKeywords extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                //TODO:add keyword
-                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsKeywords.this);
-                builder.setTitle("Add Keyword");
-
-                final EditText input = new EditText(SettingsKeywords.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        keyword = input.getText().toString();
-                        mKeyword = new Keyword(keyword);
-                        mKeywords.add(mKeyword);
-                        update();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                showAddKeywordDialog();
             }
         });
+    }
+
+    private void showAddKeywordDialog(){
+        AddDialog addDialog=new AddDialog(this,"Keywords",this);
+    }
+
+    private void addKeyword(String keyword){
+        if (!contains(keyword)){
+            mKeyword = new Keyword(keyword);
+            mKeyword.save();
+            mKeywords.add(mKeyword);
+            update();
+        } else {
+            Toast.makeText(this,"Keyword already exist", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean contains(String name) {
+        for(Keyword keyword: mKeywords){
+            if (keyword.is(name)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void update() {
         mKeywordsAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onOK(String s) {
+        addKeyword(s);
+    }
 }

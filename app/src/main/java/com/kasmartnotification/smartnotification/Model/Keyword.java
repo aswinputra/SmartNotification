@@ -1,22 +1,32 @@
 package com.kasmartnotification.smartnotification.Model;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by aswinhartono on 14/9/17.
  */
 
-public class Keyword {
+public class Keyword extends SugarRecord{
 
-    private String keyword;
+    private String name;
+
+    public Keyword(){
+
+    }
 
     public Keyword(String keyword) {
-        this.keyword = keyword;
+        this.name = keyword;
     }
 
-    public String getKeyword() {
-        return keyword;
+    public String getName() {
+        return name;
     }
 
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean is(String name){
+        return this.name.equals(name);
     }
 }

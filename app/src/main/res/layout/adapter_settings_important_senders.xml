@@ -29,5 +29,5 @@
         app:layout_constraintTop_toTopOf="parent"
         android:maxWidth="300dp"
         android:text="Chloe Power"
-        android:layout_marginTop="25dp"/>
+        android:layout_gravity="center_vertical"/>
 </LinearLayout>

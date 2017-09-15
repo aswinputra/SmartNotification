@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.EditDialog;
+import com.kasmartnotification.smartnotification.Interfaces.OnDialogClickedListener;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by aswinhartono on 14/9/17.
@@ -20,9 +23,9 @@ import java.util.ArrayList;
 public class KeywordsAdapter extends RecyclerView.Adapter<KeywordsAdapter.KeywordsViewHolder> {
 
     private Context mContext;
-    private ArrayList<Keyword> mKeywords;
+    private List<Keyword> mKeywords;
 
-    public KeywordsAdapter(Context context, ArrayList<Keyword> keywords){
+    public KeywordsAdapter(Context context, List<Keyword> keywords){
         mContext = context;
         mKeywords = keywords;
     }
@@ -38,7 +41,7 @@ public class KeywordsAdapter extends RecyclerView.Adapter<KeywordsAdapter.Keywor
     public void onBindViewHolder(KeywordsViewHolder holder, int position) {
         Keyword keyword = mKeywords.get(position);
 
-        holder.keywordTextView.setText(keyword.getKeyword());
+        holder.keywordTextView.setText(keyword.getName());
     }
 
     @Override
@@ -46,7 +49,7 @@ public class KeywordsAdapter extends RecyclerView.Adapter<KeywordsAdapter.Keywor
         return mKeywords.size();
     }
 
-    public class KeywordsViewHolder extends RecyclerView.ViewHolder {
+    public class KeywordsViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, OnDialogClickedListener {
 
         private TextView keywordTextView;
         private LinearLayout keywordLinearLayout;
@@ -55,6 +58,32 @@ public class KeywordsAdapter extends RecyclerView.Adapter<KeywordsAdapter.Keywor
             super(itemView);
             keywordTextView = itemView.findViewById(R.id.adapter_keywords);
             keywordLinearLayout = itemView.findViewById(R.id.adapter_keywords_linear_layout);
+
+            keywordLinearLayout.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            showEditDialog(getAdapterPosition());
+            return true;
+        }
+
+        private void showEditDialog(int adapterPosition) {
+            EditDialog editDialog = new EditDialog(mContext, mKeywords.get(adapterPosition),this);
+        }
+
+        @Override
+        public void onOK(Object object, String newString) {
+            ((Keyword)object).setName(newString);
+            ((Keyword)object).save();
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onDelete(Object object) {
+            ((Keyword)object).delete();
+            mKeywords.remove(getAdapterPosition());
+            notifyDataSetChanged();
         }
     }
 }

@@ -15,32 +15,39 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.Adapter.ImportantSendersAdapter;
+import com.kasmartnotification.smartnotification.AddDialog;
+import com.kasmartnotification.smartnotification.Interfaces.OnDialogAddListener;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Utility;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.kasmartnotification.smartnotification.Constants.PICK_CONTACT;
 
-public class SettingsImportantSenders extends AppCompatActivity {
+public class SettingsImportantSenders extends AppCompatActivity implements OnDialogAddListener{
 
     private RecyclerView importantSendersRecyclerView;
     private ImportantSendersAdapter mSenderAdapter;
-    private ArrayList<ImportantSender> mSenders;
+    private List<ImportantSender> mSenders;
     private ImportantSender sender;
-    private String senderName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_important_senders);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_important_senders_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mSenders = new ArrayList<>();
+        mSenders = ImportantSender.listAll(ImportantSender.class);
+        if (mSenders == null){
+            mSenders = new ArrayList<>();
+        }
 
         importantSendersRecyclerView = findViewById(R.id.activity_settings_important_senders_recycler_view);
         mSenderAdapter = new ImportantSendersAdapter(this, mSenders);
@@ -51,40 +58,43 @@ public class SettingsImportantSenders extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                //TODO: add new important senders
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsImportantSenders.this);
-                builder.setTitle("Add Sender Name");
-
-                final EditText input = new EditText(SettingsImportantSenders.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        senderName = input.getText().toString();
-                        sender = new ImportantSender(senderName);
-                        mSenders.add(sender);
-                        update();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                showAddSenderDialog();
             }
         });
 
     }
 
+    private void showAddSenderDialog(){
+        AddDialog addDialog = new AddDialog(this,"Sender", this);
+    }
+
+    private void addNewSender(String name){
+        if (!contains(name)) {
+            sender = new ImportantSender(name);
+            sender.save();
+            mSenders.add(sender);
+            update();
+        }else {
+            Toast.makeText(this, "Name already exists",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private boolean contains(String name){
+        for(ImportantSender sender: mSenders){
+            if (sender.is(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void update() {
         mSenderAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onOK(String s) {
+        addNewSender(s);
     }
 }
