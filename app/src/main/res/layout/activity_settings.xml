@@ -18,8 +18,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_weight="@dimen/settings_weight_image"
             android:src="@drawable/ic_access_time_black_24dp"/>
         <TextView
             android:layout_width="0dp"
@@ -27,7 +26,7 @@
             android:layout_marginStart="@dimen/activity_settings_time_margin_start"
             android:text="@string/time"
             android:layout_gravity="center"
-            android:layout_weight="80"
+            android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
     <LinearLayout
@@ -42,8 +41,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_weight="@dimen/settings_weight_image"
             android:src="@drawable/ic_location_grey_24dp"/>
         <TextView
             android:layout_width="0dp"
@@ -51,7 +49,7 @@
             android:layout_marginStart="@dimen/activity_settings_time_margin_start"
             android:text="@string/location"
             android:layout_gravity="center"
-            android:layout_weight="80"
+            android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
     <LinearLayout
@@ -66,8 +64,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_weight="@dimen/settings_weight_image"
             android:src="@drawable/ic_activity_grey_24dp"/>
         <TextView
             android:layout_width="0dp"
@@ -75,7 +72,7 @@
             android:layout_marginStart="@dimen/activity_settings_time_margin_start"
             android:text="@string/activity"
             android:layout_gravity="center"
-            android:layout_weight="80"
+            android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
     <LinearLayout
@@ -90,8 +87,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_weight="@dimen/settings_weight_image"
             android:src="@drawable/ic_keyboard_grey_24dp"/>
         <TextView
             android:layout_width="0dp"
@@ -99,7 +95,7 @@
             android:layout_marginStart="@dimen/activity_settings_time_margin_start"
             android:text="@string/keywords"
             android:layout_gravity="center_vertical"
-            android:layout_weight="80"
+            android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
 </LinearLayout>

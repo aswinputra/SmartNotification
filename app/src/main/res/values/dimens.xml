@@ -21,4 +21,7 @@
     <dimen name="activity_settings_time_title_size">17sp</dimen>
     <dimen name="margin_top_function">10dp</dimen>
 
+    <dimen name="settings_weight_image">15</dimen>
+    <dimen name="settings_weight_text_view">85</dimen>
+
 </resources>
