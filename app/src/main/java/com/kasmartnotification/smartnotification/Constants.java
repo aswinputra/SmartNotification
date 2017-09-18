@@ -48,6 +48,7 @@ public class Constants {
     public static final int INCREMENT_BY_HOUR = 30;
     public static final int INCREMENT_BY_MINUTE = 5;
 
-    public static final int PICK_CONTACT = 1;
+    public static final String FOCUS_TIME = "FOCUS_TIME_VALUE";
+    public static final String BREAK_DURATION = "BREAK_DURATION_VALUE";
 
 }

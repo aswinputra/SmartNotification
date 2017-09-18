@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Status;
@@ -37,7 +38,14 @@ public class FocusPeriodService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(Constants.STATUS_LOG, "Focus Period Service: onStartCommand");
-        timer = new CountDownTimer(120000, Constants.COUNTDOWN_INTERVAL) {
+        Setting focusPeriodSetting = SugarHelper.findFromDB(Setting.class, Constants.FOCUS_TIME);
+        long focusPeriodMilli;
+        if (focusPeriodSetting!=null){
+            focusPeriodMilli = Utility.minToMillisecond(focusPeriodSetting.getTime());
+        }else{
+            focusPeriodMilli = Utility.minToMillisecond(Constants.INCREMENT_BY_HOUR);
+        }
+        timer = new CountDownTimer(focusPeriodMilli, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Log.i(Constants.SERVICE_LOG, "FocusPeriod onTick: " + CalendarHelper.getSecondFromMillis(millisUntilFinished));
@@ -47,7 +55,7 @@ public class FocusPeriodService extends Service {
             @Override
             public void onFinish() {
                 Log.i(Constants.STATUS_LOG, "FocusPeriod Timer is finished");
-                SugarHelper.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, false, null, null);
+                SugarHelper.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, false, null, null,0);
                 updateTimerView(Constants.END_TIMER);
                 if(!Utility.isBroadcastReceiverRegistered()){
                     continueToBreak();
@@ -55,8 +63,8 @@ public class FocusPeriodService extends Service {
             }
         };
         timer.start();
-        SugarHelper.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.FOCUS_TIMER, null);
-        SugarHelper.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, true, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.FOCUS_TIMER, null,0);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.FOCUS_TIMER, true, null, null,0);
 
         return START_STICKY;
     }

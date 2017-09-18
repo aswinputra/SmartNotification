@@ -18,13 +18,13 @@ import java.util.List;
 
 public class SugarHelper {
 
-    public static <T> void createOrSetDBObject(Class<T> type, String name, @Nullable Boolean running, @Nullable String content, @Nullable Calendar calendar) {
+    public static <T> void createOrSetDBObject(Class<T> type, String name, @Nullable Boolean running, @Nullable String content, @Nullable Calendar calendar, @Nullable long milliseconds) {
         if (type == Setting.class) {
             Setting setting = findFromDB(Setting.class, name);
             if (setting == null) {
-                setting = new Setting(name, content, calendar);
+                setting = new Setting(name, content, calendar, milliseconds);
             } else {
-                setting.set(content, calendar);
+                setting.set(content, calendar,milliseconds);
             }
             setting.save();
         } else if (type == Status.class) {

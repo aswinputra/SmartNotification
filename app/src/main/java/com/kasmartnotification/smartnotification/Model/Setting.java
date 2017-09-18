@@ -14,8 +14,9 @@ public class Setting extends SugarRecord {
 
     private String name;
     private String value;
+    private long time;
     private Calendar calendar;
-    private boolean on;
+    private boolean toggle;
 
     public Setting(){
 
@@ -26,7 +27,12 @@ public class Setting extends SugarRecord {
         this.value = value;
     }
 
-    public Setting(String name, @Nullable String value, @Nullable Calendar calendar) {
+    public Setting(String name, long time){
+        this.name = name;
+        this.time = time;
+    }
+
+    public Setting(String name, @Nullable String value, @Nullable Calendar calendar, @Nullable long time) {
         this.name = name;
         if(value != null) {
             this.value = value;
@@ -34,15 +40,17 @@ public class Setting extends SugarRecord {
         if(calendar != null){
             this.calendar = calendar;
         }
+        this.time = time;
     }
 
-    public void set(@Nullable String value, @Nullable Calendar calendar) {
+    public void set(@Nullable String value, @Nullable Calendar calendar, @Nullable long time) {
         if(value != null) {
             this.value = value;
         }
         if(calendar != null){
             this.calendar = calendar;
         }
+        this.time = time;
     }
 
     public String getName() {
@@ -71,5 +79,13 @@ public class Setting extends SugarRecord {
 
     public boolean is(String name){
         return this.name.equals(name);
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intentFilter.addAction(Constants.SMART_NOTIFICATION_END);
         LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver), intentFilter);
 
-        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null,0);
 
         refreshView();
     }
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null, 0);
         super.onStop();
     }
 

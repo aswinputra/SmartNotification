@@ -3,11 +3,13 @@ package com.kasmartnotification.smartnotification.Controller;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 
 import java.text.DecimalFormat;
 
@@ -35,10 +37,19 @@ public class SettingsTime extends AppCompatActivity {
 
         focusPeriod = findViewById(R.id.activity_settings_time_focus_period_seekBar);
         focusPeriod.setMax(330);
-        focusPeriod.setProgress(0);
-        String focusPeriodProgress = Integer.toString(focusPeriodValue(focusPeriod.getProgress()));
-        focusPeriodTime.setText(focusPeriodProgress);
-        focusPeriodHour.setText(R.string.minute);
+        int settingFocusTime;
+        Setting TimeSetting = SugarHelper.findFromDB(Setting.class, Constants.FOCUS_TIME);
+        settingFocusTime = getProgressBar(TimeSetting, INCREMENT_BY_HOUR);
+        focusPeriod.setProgress(settingFocusTime-INCREMENT_BY_HOUR);
+        if (settingFocusTime<60){
+            String progress = Integer.toString(settingFocusTime);
+            focusPeriodTime.setText(progress);
+            focusPeriodHour.setText(R.string.minute);
+        }else {
+            String time = Double.toString(getFocusPeriodTime(settingFocusTime));
+            focusPeriodTime.setText(time);
+            focusPeriodHour.setText(R.string.hours);
+        }
         focusPeriod.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -70,12 +81,16 @@ public class SettingsTime extends AppCompatActivity {
                     focusPeriodTime.setText(time);
                     focusPeriodHour.setText(R.string.hours);
                 }
+                long focusTimeInMilliseconds = focusPeriodValue(seekBar.getProgress());
+                SugarHelper.createOrSetDBObject(Setting.class,Constants.FOCUS_TIME,null,null, null, focusTimeInMilliseconds);
             }
         });
 
         breakDuration = findViewById(R.id.activity_settings_time_break_duration_seekBar);
         breakDuration.setMax(55);
-        breakDuration.setProgress(0);
+        Setting breakDurationSetting = SugarHelper.findFromDB(Setting.class, Constants.BREAK_DURATION);
+        int settingBreakDuration = getProgressBar(breakDurationSetting, INCREMENT_BY_MINUTE);
+        breakDuration.setProgress(settingBreakDuration-INCREMENT_BY_MINUTE);
         String breakDurationProgress = Integer.toString(breakDurationValue(breakDuration.getProgress()));
         breakDurationTime.setText(breakDurationProgress);
         breakDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -95,9 +110,23 @@ public class SettingsTime extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 String progress = Integer.toString(breakDurationValue(seekBar.getProgress()));
                 breakDurationTime.setText(progress);
+                long breakTimeInMilliseconds = breakDurationValue(seekBar.getProgress());
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.BREAK_DURATION, null, null, null,breakTimeInMilliseconds);
             }
         });
 
+    }
+
+    private <T> int getProgressBar(T setting,int type) {
+        int settingTime;
+        if (setting!=null){
+            settingTime = (int)((Setting)setting).getTime();
+            return settingTime;
+        }else{
+            settingTime = type;
+            SugarHelper.createOrSetDBObject(Setting.class,Constants.FOCUS_TIME, null,null, null, settingTime);
+            return settingTime;
+        }
     }
 
     private double getFocusPeriodTime(double seekBarValue){
@@ -106,8 +135,7 @@ public class SettingsTime extends AppCompatActivity {
     }
 
     private int focusPeriodValue(int seekBarValue){
-        int theTime = seekBarValue + INCREMENT_BY_HOUR;
-        return theTime;
+        return seekBarValue + INCREMENT_BY_HOUR;
     }
 
     private int breakDurationValue(int seekBarValue){

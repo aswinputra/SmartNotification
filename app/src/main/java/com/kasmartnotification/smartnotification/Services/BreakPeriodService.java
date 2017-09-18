@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Status;
@@ -39,8 +40,14 @@ public class BreakPeriodService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(Constants.STATUS_LOG, "Break Period Service: onStartCommand");
         NotificationHelper.notifyAll(this);
-
-         timer = new CountDownTimer(60000, Constants.COUNTDOWN_INTERVAL) {
+        Setting breakPeriodSetting = SugarHelper.findFromDB(Setting.class, Constants.BREAK_DURATION);
+        long breakPeriodMilli;
+        if (breakPeriodSetting!=null){
+            breakPeriodMilli = Utility.minToMillisecond(breakPeriodSetting.getTime());
+        }else{
+            breakPeriodMilli = Utility.minToMillisecond(Constants.INCREMENT_BY_MINUTE);
+        }
+         timer = new CountDownTimer(breakPeriodMilli, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + CalendarHelper.getSecondFromMillis(millisUntilFinished));
@@ -51,7 +58,7 @@ public class BreakPeriodService extends Service {
             public void onFinish() {
                 Log.i(Constants.STATUS_LOG, "BreakPeriod Timer is finished");
 
-                SugarHelper.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, false, null, null);
+                SugarHelper.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, false, null, null,0);
 
                 updateTimerView(Constants.END_TIMER);
                 if(!Utility.isBroadcastReceiverRegistered()){
@@ -60,8 +67,8 @@ public class BreakPeriodService extends Service {
             }
         };
         timer.start();
-        SugarHelper.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.BREAK_TIMER, null);
-        SugarHelper.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, true, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.BREAK_TIMER, null,0);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, true, null, null,0);
 
         return START_STICKY;
     }

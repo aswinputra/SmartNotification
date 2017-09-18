@@ -95,8 +95,8 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
         setUpRecyclerView();
 
         //TODO: can we make it better?
-        SugarHelper.createOrSetDBObject(BlackListPackage.class, "android", null, null, null);
-        SugarHelper.createOrSetDBObject(BlackListPackage.class, context.getPackageName(), null, null, null);
+        SugarHelper.createOrSetDBObject(BlackListPackage.class, "android", null, null, null,0);
+        SugarHelper.createOrSetDBObject(BlackListPackage.class, context.getPackageName(), null, null, null,0);
     }
 
     private void setUpRecyclerView() {

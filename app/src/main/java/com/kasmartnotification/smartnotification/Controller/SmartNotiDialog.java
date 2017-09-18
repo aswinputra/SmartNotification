@@ -92,7 +92,7 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
             case R.id.dialog_smart_noti_done_btn: {
                 //check if it's unlimited or bounded by time
                 if(onUntilOffRadio.isChecked()){
-                    SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED, true, null, null);
+                    SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED, true, null, null,0);
                 }else if(onForNhourRadio.isChecked()){
                     saveSmartNotiEndTime();
                     context.startService(new Intent(context, SmartNotiService.class));
@@ -142,6 +142,6 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
 //        for testing
 //        Calendar endTime = Calendar.getInstance();
 //        endTime.add(Calendar.MINUTE, 3);
-        SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);
+        SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime,0);
     }
 }

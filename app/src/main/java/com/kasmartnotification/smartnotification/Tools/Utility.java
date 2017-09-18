@@ -14,6 +14,7 @@ import com.kasmartnotification.smartnotification.Model.Status;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kiman on 27/8/17.
@@ -95,5 +96,17 @@ public class Utility {
 
         }
         return names;
+    }
+
+    public static long minToMillisecond(long minute){
+        return TimeUnit.MINUTES.toMillis(minute);
+    }
+
+    public static long hourToMillisecond(int hour){
+        return TimeUnit.HOURS.toMillis(hour);
+    }
+
+    public static long millisecondToMin(long milli){
+        return TimeUnit.MILLISECONDS.toMinutes(milli);
     }
 }

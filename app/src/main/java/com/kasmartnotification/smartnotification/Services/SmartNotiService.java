@@ -53,14 +53,14 @@ public class SmartNotiService extends Service {
                 public void onFinish() {
                     Log.i(Constants.SERVICE_LOG, "Smart Noti Timer is finished");
 
-                    SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION, false, null, null);
+                    SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION, false, null, null,0);
 
                     sendEndFlag();
                 }
             };
             timer.start();
 
-            SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION, true, null, null);
+            SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION, true, null, null,0);
         }
 
         return START_STICKY;
