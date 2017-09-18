@@ -1,20 +1,15 @@
 package com.kasmartnotification.smartnotification.Controller;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.Adapter.KeywordsAdapter;
-import com.kasmartnotification.smartnotification.AddDialog;
 import com.kasmartnotification.smartnotification.Interfaces.OnDialogAddListener;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.R;

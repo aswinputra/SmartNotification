@@ -1,33 +1,21 @@
 package com.kasmartnotification.smartnotification.Controller;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.Adapter.ImportantSendersAdapter;
-import com.kasmartnotification.smartnotification.AddDialog;
 import com.kasmartnotification.smartnotification.Interfaces.OnDialogAddListener;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.R;
-import com.kasmartnotification.smartnotification.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.kasmartnotification.smartnotification.Constants.PICK_CONTACT;
 
 public class SettingsImportantSenders extends AppCompatActivity implements OnDialogAddListener{
 

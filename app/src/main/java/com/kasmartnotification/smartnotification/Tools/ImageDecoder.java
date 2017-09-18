@@ -1,4 +1,4 @@
-package com.kasmartnotification.smartnotification;
+package com.kasmartnotification.smartnotification.Tools;
 
 import android.content.Context;
 import android.content.res.Resources;

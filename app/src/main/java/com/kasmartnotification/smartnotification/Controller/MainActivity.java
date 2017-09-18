@@ -1,16 +1,11 @@
 package com.kasmartnotification.smartnotification.Controller;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,17 +15,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartListener;
-import com.kasmartnotification.smartnotification.NotificationHelper;
+import com.kasmartnotification.smartnotification.Tools.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.BreakPeriodService;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
 import com.kasmartnotification.smartnotification.Services.NotificationListener;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener {
 
@@ -124,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         timerTV.setText(time);
                         if (time.equals(Constants.END_TIMER)) {
                             timerTV.setText(Constants.ZERO);
-                            Status status = Utility.findFromDB(Status.class, Constants.PREVIOUS_TIMER);
+                            Status status = SugarHelper.findFromDB(Status.class, Constants.PREVIOUS_TIMER);
                             if (status != null && status.getContent().equals(Constants.BREAK_TIMER)) {
                                 prepareForOtherTimer(Constants.FOCUS_TIMER);
                             } else if (status != null && status.getContent().equals(Constants.FOCUS_TIMER)) {
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void prepareForOtherTimer(String whichTimer) {
-        if (Utility.isSmartNotiInUse()) {
+        if (SugarHelper.isSmartNotiInUse()) {
             switch (whichTimer) {
                 case (Constants.FOCUS_TIMER): {
                     nextBreakInTV.setText(getResources().getString(R.string.next_break_in));
@@ -178,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intentFilter.addAction(Constants.SMART_NOTIFICATION_END);
         LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver), intentFilter);
 
-        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null);
 
         refreshView();
     }
@@ -192,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        Utility.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
         super.onStop();
     }
 
@@ -230,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stopService(new Intent(MainActivity.this, FocusPeriodService.class));
         stopService(new Intent(MainActivity.this, BreakPeriodService.class));
         stopService(new Intent(MainActivity.this, NotificationListener.class));
-        Utility.deleteStatusEntity();
+        SugarHelper.deleteStatusEntity();
         setSmartNotiOffView();
     }
 
@@ -262,16 +259,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @return true means there are no service running at the moment or started even started yet
      */
     private boolean isNotStarted() {
-        Status smartNotiStatus = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION);
-        Status smartNotiUnbounded = Utility.findFromDB(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED);
+        Status smartNotiStatus = SugarHelper.findFromDB(Status.class, Constants.SMART_NOTIFICATION);
+        Status smartNotiUnbounded = SugarHelper.findFromDB(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED);
         return smartNotiStatus == null && smartNotiUnbounded == null;
     }
 
     private void refreshView() {
-        Status focusTimer = Utility.findFromDB(Status.class, Constants.FOCUS_TIMER);
-        Status breakTimer = Utility.findFromDB(Status.class, Constants.BREAK_TIMER);
+        Status focusTimer = SugarHelper.findFromDB(Status.class, Constants.FOCUS_TIMER);
+        Status breakTimer = SugarHelper.findFromDB(Status.class, Constants.BREAK_TIMER);
 
-        if (Utility.isSmartNotiInUse()) {
+        if (SugarHelper.isSmartNotiInUse()) {
             setSmartNotiOnView();
             if (focusTimer != null && focusTimer.isRunning()) {
                 nextBreakInTV.setText(getResources().getString(R.string.next_break_in));
@@ -287,9 +284,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setSmartNotiOnView() {
         smartNotiFab.setImageResource(R.drawable.ic_no_noti);
         toggleFeedbackVis(true);
-        Setting endTime = Utility.findFromDB(Setting.class, Constants.SMART_NOTIFICATION_END_TIME);
+        Setting endTime = SugarHelper.findFromDB(Setting.class, Constants.SMART_NOTIFICATION_END_TIME);
         if (endTime != null) {
-            String test = Utility.getTimeString(endTime.getCalendar());
+            String test = CalendarHelper.getTimeString(endTime.getCalendar());
             endTimeTV.setText(test);
         } else {
             endTimeTV.setText(getResources().getString(R.string.turned_off));

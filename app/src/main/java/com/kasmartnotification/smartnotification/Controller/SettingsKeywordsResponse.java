@@ -12,11 +12,9 @@ import android.widget.TextView;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.R;
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class SettingsKeywordsResponse extends AppCompatActivity implements View.OnClickListener {
 

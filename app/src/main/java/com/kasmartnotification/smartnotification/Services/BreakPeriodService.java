@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Status;
-import com.kasmartnotification.smartnotification.NotificationHelper;
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.NotificationHelper;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
 /**
  * Created by kiman on 29/8/17.
@@ -41,15 +43,15 @@ public class BreakPeriodService extends Service {
          timer = new CountDownTimer(60000, Constants.COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + Utility.getSecondFromMillis(millisUntilFinished));
-                updateTimerView(Utility.getMinutesStr(millisUntilFinished));
+                Log.i(Constants.SERVICE_LOG, "BreakPeriod onTick: " + CalendarHelper.getSecondFromMillis(millisUntilFinished));
+                updateTimerView(CalendarHelper.getMinutesStr(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
                 Log.i(Constants.STATUS_LOG, "BreakPeriod Timer is finished");
 
-                Utility.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, false, null, null);
+                SugarHelper.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, false, null, null);
 
                 updateTimerView(Constants.END_TIMER);
                 if(!Utility.isBroadcastReceiverRegistered()){
@@ -58,8 +60,8 @@ public class BreakPeriodService extends Service {
             }
         };
         timer.start();
-        Utility.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.BREAK_TIMER, null);
-        Utility.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, true, null, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.PREVIOUS_TIMER, null, Constants.BREAK_TIMER, null);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.BREAK_TIMER, true, null, null);
 
         return START_STICKY;
     }
@@ -86,7 +88,7 @@ public class BreakPeriodService extends Service {
     }
 
     private void continueToFocus(){
-        if(Utility.isSmartNotiInUse()) {
+        if(SugarHelper.isSmartNotiInUse()) {
             Intent intent = new Intent(getApplicationContext(), FocusPeriodService.class);
             startService(intent);
         }

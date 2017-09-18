@@ -1,6 +1,6 @@
 package com.kasmartnotification.smartnotification.Model;
 
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
 /**
  * Created by kiman on 2/9/17.

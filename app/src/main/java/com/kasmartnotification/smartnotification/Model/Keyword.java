@@ -15,7 +15,7 @@ public class Keyword extends SugarRecord{
     }
 
     public Keyword(String keyword) {
-        this.name = keyword;
+        this.name = keyword.toLowerCase();
     }
 
     public String getName() {
@@ -23,7 +23,7 @@ public class Keyword extends SugarRecord{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public boolean is(String name){

@@ -24,9 +24,9 @@ import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.Model.Section;
 import com.kasmartnotification.smartnotification.Model.Sections;
-import com.kasmartnotification.smartnotification.NotificationHelper;
+import com.kasmartnotification.smartnotification.Tools.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 
 /**
  * Created by kiman on 1/9/17.
@@ -95,8 +95,8 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
         setUpRecyclerView();
 
         //TODO: can we make it better?
-        Utility.createOrSetDBObject(BlackListPackage.class, "android", null, null, null);
-        Utility.createOrSetDBObject(BlackListPackage.class, context.getPackageName(), null, null, null);
+        SugarHelper.createOrSetDBObject(BlackListPackage.class, "android", null, null, null);
+        SugarHelper.createOrSetDBObject(BlackListPackage.class, context.getPackageName(), null, null, null);
     }
 
     private void setUpRecyclerView() {

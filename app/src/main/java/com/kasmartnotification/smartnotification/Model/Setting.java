@@ -15,6 +15,7 @@ public class Setting extends SugarRecord {
     private String name;
     private String value;
     private Calendar calendar;
+    private boolean on;
 
     public Setting(){
 

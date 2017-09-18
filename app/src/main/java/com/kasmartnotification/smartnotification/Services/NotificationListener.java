@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Notifications;
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 
 /**
  * Created by kiman on 1/9/17.
@@ -32,7 +32,7 @@ public class NotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
 
-        if (Utility.isFocusTimerOn()) {
+        if (SugarHelper.isFocusTimerOn()) {
             Notification incomingNoti = sbn.getNotification();
             String details = "package: " + sbn.getPackageName() + "\n";
             Bundle extras = incomingNoti.extras;

@@ -13,7 +13,7 @@ public class ImportantSender extends SugarRecord{
     }
 
     public ImportantSender(String name){
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public String getName() {
@@ -21,7 +21,7 @@ public class ImportantSender extends SugarRecord{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public boolean is(String name){

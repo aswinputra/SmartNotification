@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Interfaces.OnSmartNotiStartListener;
 import com.kasmartnotification.smartnotification.Model.Setting;
@@ -19,7 +20,7 @@ import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.FocusPeriodService;
 import com.kasmartnotification.smartnotification.Services.NotificationListener;
 import com.kasmartnotification.smartnotification.Services.SmartNotiService;
-import com.kasmartnotification.smartnotification.Utility;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 
 import java.util.Calendar;
 
@@ -91,7 +92,7 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
             case R.id.dialog_smart_noti_done_btn: {
                 //check if it's unlimited or bounded by time
                 if(onUntilOffRadio.isChecked()){
-                    Utility.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED, true, null, null);
+                    SugarHelper.createOrSetDBObject(Status.class, Constants.SMART_NOTIFICATION_UNBOUNDED, true, null, null);
                 }else if(onForNhourRadio.isChecked()){
                     saveSmartNotiEndTime();
                     context.startService(new Intent(context, SmartNotiService.class));
@@ -128,7 +129,7 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
     private void setTimeAndHint(int nHour){
         Resources res = context.getResources();
 
-        String endTime = Utility.getTimeString(Utility.getAddedCalendar(smartNotiHour));
+        String endTime = CalendarHelper.getTimeString(CalendarHelper.getAddedCalendar(smartNotiHour));
         String onForNHours = String.format(res.getString(R.string.on_for_n_hours), nHour);
         String onUntilFeedback = String.format(res.getString(R.string.on_until_when), endTime);
 
@@ -137,10 +138,10 @@ public class SmartNotiDialog extends AppCompatDialog implements View.OnClickList
     }
 
     private void saveSmartNotiEndTime(){
-        Calendar endTime = Utility.getAddedCalendar(smartNotiHour);
+        Calendar endTime = CalendarHelper.getAddedCalendar(smartNotiHour);
 //        for testing
 //        Calendar endTime = Calendar.getInstance();
 //        endTime.add(Calendar.MINUTE, 3);
-        Utility.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);
+        SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_NOTIFICATION_END_TIME, null, null, endTime);
     }
 }

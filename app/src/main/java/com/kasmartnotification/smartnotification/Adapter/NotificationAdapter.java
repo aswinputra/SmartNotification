@@ -1,30 +1,27 @@
 package com.kasmartnotification.smartnotification.Adapter;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
-import com.kasmartnotification.smartnotification.ImageDecoder;
+import com.kasmartnotification.smartnotification.Tools.ImageDecoder;
 import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
-import com.kasmartnotification.smartnotification.NotificationHelper;
+import com.kasmartnotification.smartnotification.Tools.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
-import com.kasmartnotification.smartnotification.Utility;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -155,12 +152,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     private void setTime(TextView postedTimeTV, long postedTime) {
-        int timeToShow = Utility.timeDiffInMinute(postedTime);
+        int timeToShow = CalendarHelper.timeDiffInMinute(postedTime);
         String timeToShowStr = "";
         if (timeToShow < Constants.ONE_MINUTE) {
             timeToShowStr += timeToShow + "m";
         } else {
-            timeToShow = Utility.timeDiffInHour(timeToShow);
+            timeToShow = CalendarHelper.timeDiffInHour(timeToShow);
             timeToShowStr += timeToShow + "h";
         }
         postedTimeTV.setText(timeToShowStr);

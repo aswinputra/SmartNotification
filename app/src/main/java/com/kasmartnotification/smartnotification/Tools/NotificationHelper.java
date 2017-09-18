@@ -1,4 +1,4 @@
-package com.kasmartnotification.smartnotification;
+package com.kasmartnotification.smartnotification.Tools;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,9 +15,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Controller.MainActivity;
 import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
+import com.kasmartnotification.smartnotification.R;
 
 /**
  * Created by kiman on 14/9/17.

@@ -1,10 +1,11 @@
 package com.kasmartnotification.smartnotification.Model;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 import com.orm.SugarRecord;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class Notification extends SugarRecord{
 
     private void determineImportance() {
         try {
-            if (determinedImportant(message)) {
+            if (determinedImportant()) {
                 setImportant(true);
             } else {
                 setImportant(false);
@@ -103,17 +104,8 @@ public class Notification extends SugarRecord{
     }
 
     private boolean isBlackListed() {
-        try {
-            List<BlackListPackage> blackListPackageList = BlackListPackage.listAll(BlackListPackage.class);
-            for (BlackListPackage bLPackage : blackListPackageList) {
-                if (this.pkgName.equals(bLPackage.getName())) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
-        }
-        return false;
+        BlackListPackage matchedBLPkg = SugarHelper.findFromDB(BlackListPackage.class, pkgName.toLowerCase());
+        return matchedBLPkg != null;
     }
 
     public boolean isValid(){
@@ -130,9 +122,10 @@ public class Notification extends SugarRecord{
         return getId().intValue();
     }
 
-    public static boolean determinedImportant(String message){
-        //TODO: we will need a database for this
-        return message.toLowerCase().contains("urgent");
+    private boolean determinedImportant(){
+        ImportantSender matchedSender = SugarHelper.findFromDB(ImportantSender.class, title.toLowerCase());
+
+        return containsKeyword() || matchedSender != null;
     }
 
     private boolean isTitleValid(){
@@ -149,5 +142,16 @@ public class Notification extends SugarRecord{
         String message = this.message.toLowerCase();
         return !message.isEmpty() &&
                 !message.equals("null");
+    }
+
+    private boolean containsKeyword(){
+        String message = this.message.toLowerCase();
+        List<Keyword> keywords = Keyword.listAll(Keyword.class);
+        for(Keyword keyword: keywords){
+            if(message.contains(keyword.getName())){
+                return true;
+            }
+        }
+        return false;
     }
 }
