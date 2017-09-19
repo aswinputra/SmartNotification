@@ -9,9 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 import com.kasmartnotification.smartnotification.Tools.Utility;
 
 import java.util.List;
@@ -28,7 +31,6 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
     private Switch automaticResponseSwitch;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,14 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         importantSenders = findViewById(R.id.activity_settings_keywords_response_important_senders_linear_layout);
         allowImportantSendersSwitch = findViewById(R.id.activity_settings_keywords_response_allow_important_senders_switch);
         importantSendersTextView = findViewById(R.id.activity_settings_keywords_response_important_senders_text_view);
+        boolean booleanSender = false;
+        boolean booleanKeyword = false;
+        boolean booleanAutoResponse = false;
+
+        Setting allowImportantSndrSetting = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_SENDER);
+        booleanSender = getSwitchValue(allowImportantSndrSetting, Constants.IMPORTANT_SENDER);
+        allowImportantSendersSwitch.setOnCheckedChangeListener(null);
+        allowImportantSendersSwitch.setChecked(booleanSender);
 
         List<ImportantSender> senders = ImportantSender.listAll(ImportantSender.class);
 
@@ -52,9 +62,12 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
                     //TODO:allow important senders through
+
                 }else{
                     //TODO:do not allow anyone through
+
                 }
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.IMPORTANT_SENDER, null, null, null, 0, b);
             }
         });
 
@@ -62,6 +75,11 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         keywords = findViewById(R.id.activity_settings_keywords_response_keywords_linear_layout);
         allowKeywordsSwitch = findViewById(R.id.activity_settings_keywords_response_allow_keywords_switch);
         keywordsTextView = findViewById(R.id.activity_settings_keywords_response_keywords_text_view);
+
+        Setting allowKeywordsSetting = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_KEYWORDS);
+        booleanKeyword = getSwitchValue(allowKeywordsSetting, Constants.IMPORTANT_KEYWORDS);
+        allowKeywordsSwitch.setOnCheckedChangeListener(null);
+        allowKeywordsSwitch.setChecked(booleanKeyword);
 
         List<Keyword> keywordsList = Keyword.listAll(Keyword.class);
         if (!keywordsList.isEmpty()){
@@ -78,12 +96,19 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
                 }else{
                     //TODO: do not allow keywords through
                 }
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.IMPORTANT_KEYWORDS, null, null, null, 0, b);
             }
         });
 
         automaticResponse = findViewById(R.id.activity_settings_keywords_response_automatic_response_linear_layout);
         replyMessages = findViewById(R.id.activity_settings_keywords_response_reply_messages_linear_layout);
         automaticResponseSwitch = findViewById(R.id.activity_settings_keywords_response_automatic_response_switch);
+
+        Setting automaticResponseSetting = SugarHelper.findFromDB(Setting.class, Constants.AUTOMATIC_RESPONSE);
+        booleanAutoResponse = getSwitchValue(automaticResponseSetting, Constants.AUTOMATIC_RESPONSE);
+        automaticResponseSwitch.setOnCheckedChangeListener(null);
+        automaticResponseSwitch.setChecked(booleanAutoResponse);
+
         automaticResponseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -92,6 +117,7 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
                 }else{
                     //TODO: automatic response off
                 }
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.AUTOMATIC_RESPONSE, null, null, null, 0, b);
             }
         });
 
@@ -158,5 +184,16 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
             count++;
         }
         return name;
+    }
+
+    private <T> boolean getSwitchValue(T setting, final String type) {
+        boolean toggle;
+        if (setting!=null){
+            toggle = ((Setting)setting).isToggle();
+        }else{
+            toggle = false;
+            SugarHelper.createOrSetDBObject(Setting.class,type, null,null, null, 0, toggle);
+        }
+        return toggle;
     }
 }

@@ -20,7 +20,6 @@ public class SettingsTime extends AppCompatActivity {
 
     private SeekBar focusPeriod, breakDuration;
     private TextView focusPeriodTime, focusPeriodHour, breakDurationTime, breakDurationMin;
-    private static DecimalFormat timeFormat = new DecimalFormat(".#");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class SettingsTime extends AppCompatActivity {
         focusPeriod.setMax(330);
         int settingFocusTime;
         Setting TimeSetting = SugarHelper.findFromDB(Setting.class, Constants.FOCUS_TIME);
-        settingFocusTime = getProgressBar(TimeSetting, INCREMENT_BY_HOUR);
+        settingFocusTime = getProgressBar(TimeSetting, INCREMENT_BY_HOUR, Constants.FOCUS_TIME);
         focusPeriod.setProgress(settingFocusTime-INCREMENT_BY_HOUR);
         if (settingFocusTime<60){
             String progress = Integer.toString(settingFocusTime);
@@ -89,7 +88,7 @@ public class SettingsTime extends AppCompatActivity {
         breakDuration = findViewById(R.id.activity_settings_time_break_duration_seekBar);
         breakDuration.setMax(55);
         Setting breakDurationSetting = SugarHelper.findFromDB(Setting.class, Constants.BREAK_DURATION);
-        int settingBreakDuration = getProgressBar(breakDurationSetting, INCREMENT_BY_MINUTE);
+        int settingBreakDuration = getProgressBar(breakDurationSetting, INCREMENT_BY_MINUTE, Constants.BREAK_DURATION);
         breakDuration.setProgress(settingBreakDuration-INCREMENT_BY_MINUTE);
         String breakDurationProgress = Integer.toString(breakDurationValue(breakDuration.getProgress()));
         breakDurationTime.setText(breakDurationProgress);
@@ -117,21 +116,20 @@ public class SettingsTime extends AppCompatActivity {
 
     }
 
-    private <T> int getProgressBar(T setting,int type) {
+    private <T> int getProgressBar(T setting,int type, final String stringType) {
         int settingTime;
         if (setting!=null){
             settingTime = (int)((Setting)setting).getTime();
             return settingTime;
         }else{
             settingTime = type;
-            SugarHelper.createOrSetDBObject(Setting.class,Constants.FOCUS_TIME, null,null, null, settingTime);
+            SugarHelper.createOrSetDBObject(Setting.class,stringType, null,null, null, settingTime);
             return settingTime;
         }
     }
 
     private double getFocusPeriodTime(double seekBarValue){
-        double theTime = seekBarValue/60;
-        return theTime;
+        return seekBarValue/60;
     }
 
     private int focusPeriodValue(int seekBarValue){
@@ -139,7 +137,6 @@ public class SettingsTime extends AppCompatActivity {
     }
 
     private int breakDurationValue(int seekBarValue){
-        int theTime = seekBarValue + INCREMENT_BY_MINUTE;
-        return theTime;
+        return seekBarValue + INCREMENT_BY_MINUTE;
     }
 }

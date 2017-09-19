@@ -24,6 +24,7 @@ import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.Model.Section;
 import com.kasmartnotification.smartnotification.Model.Sections;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Tools.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Tools.SugarHelper;
@@ -95,8 +96,8 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
         setUpRecyclerView();
 
         //TODO: can we make it better?
-        SugarHelper.createOrSetDBObject(BlackListPackage.class, "android", null, null, null,0);
-        SugarHelper.createOrSetDBObject(BlackListPackage.class, context.getPackageName(), null, null, null,0);
+        SugarHelper.createOrSetDBObject(BlackListPackage.class, "android", null, null, null, 0);
+        SugarHelper.createOrSetDBObject(BlackListPackage.class, context.getPackageName(), null, null, null, 0);
     }
 
     private void setUpRecyclerView() {
@@ -121,9 +122,15 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
     @Override
     public void onNotiAdded(Notification notification) {
         update();
-        //this is to make sure that only the important ones are notified
-        if (notification.isImportant()) {
-            NotificationHelper.notify(context, notification, true);
+        //if the sender important Settings ON
+        if (allowImportantSender()) {
+            if (notification.importantBySender()) {
+                NotificationHelper.notify(context, notification, true);
+            }
+        } else if (allowImportantKeyword()) {
+            if (notification.importantByKeyword()) {
+                NotificationHelper.notify(context, notification, true);
+            }
         }
     }
 
@@ -146,7 +153,7 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
             break;
             case R.id.bottom_sheet_clear_all: {
                 Notifications notifications = Notifications.getInstance();
-                for(Notification notification: notifications.getNotificationList()){
+                for (Notification notification : notifications.getNotificationList()) {
                     NotificationHelper.cancelNotification(context, notification.getShortId());
                 }
                 notifications.removeAll();
@@ -186,5 +193,23 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
 
     public void collapseBottomSheet() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    public boolean allowImportantSender() {
+        Setting allowSender = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_SENDER);
+        if (allowSender!=null){
+            return allowSender.isToggle();
+        }else{
+            return false;
+        }
+    }
+
+    public boolean allowImportantKeyword() {
+        Setting allowKeyword = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_KEYWORDS);
+        if (allowKeyword!=null) {
+            return allowKeyword.isToggle();
+        }else {
+            return false;
+        }
     }
 }

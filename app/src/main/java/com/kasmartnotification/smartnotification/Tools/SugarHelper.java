@@ -18,6 +18,32 @@ import java.util.List;
 
 public class SugarHelper {
 
+    public static <T> void createOrSetDBObject(Class<T> type, String name, @Nullable Boolean running, @Nullable String content, @Nullable Calendar calendar, @Nullable long milliseconds, @Nullable boolean toggle) {
+        if (type == Setting.class) {
+            Setting setting = findFromDB(Setting.class, name);
+            if (setting == null) {
+                setting = new Setting(name, content, calendar, milliseconds, toggle);
+            } else {
+                setting.set(content, calendar,milliseconds, toggle);
+            }
+            setting.save();
+        } else if (type == Status.class) {
+            Status status = findFromDB(Status.class, name);
+            if (status == null) {
+                status = new Status(name, running, content);
+            } else {
+                status.set(running, content);
+            }
+            status.save();
+        } else if (type == BlackListPackage.class) {
+            BlackListPackage pkg = findFromDB(BlackListPackage.class, name);
+            if (pkg == null) {
+                pkg = new BlackListPackage(name);
+                pkg.save();
+            }
+        }
+    }
+
     public static <T> void createOrSetDBObject(Class<T> type, String name, @Nullable Boolean running, @Nullable String content, @Nullable Calendar calendar, @Nullable long milliseconds) {
         if (type == Setting.class) {
             Setting setting = findFromDB(Setting.class, name);

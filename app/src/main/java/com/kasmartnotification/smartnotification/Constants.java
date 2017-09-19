@@ -50,5 +50,9 @@ public class Constants {
 
     public static final String FOCUS_TIME = "FOCUS_TIME_VALUE";
     public static final String BREAK_DURATION = "BREAK_DURATION_VALUE";
+    public static final String SMART_REMINDER = "LOCATION_REMINDER";
+    public static final String IMPORTANT_SENDER = "IMPORTANT_SENDER";
+    public static final String AUTOMATIC_RESPONSE = "AUTOMATIC_RESPONSE";
+    public static final String IMPORTANT_KEYWORDS = "IMPORTANT_KEYWORD";
 
 }

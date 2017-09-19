@@ -73,4 +73,6 @@
     <string name="name">Name</string>
 
     <string name="expand">expand</string>
+    <string name="main_hours">Hours</string>
+    <string name="main_hour">Hour</string>
 </resources>

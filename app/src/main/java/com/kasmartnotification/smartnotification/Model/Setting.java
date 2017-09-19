@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -17,6 +18,7 @@ public class Setting extends SugarRecord {
     private long time;
     private Calendar calendar;
     private boolean toggle;
+//    private ArrayList<Object> Lists;
 
     public Setting(){
 
@@ -41,6 +43,29 @@ public class Setting extends SugarRecord {
             this.calendar = calendar;
         }
         this.time = time;
+    }
+
+    public Setting(String name, @Nullable String value, @Nullable Calendar calendar, @Nullable long time, @Nullable boolean toggle) {
+        this.name = name;
+        if(value != null) {
+            this.value = value;
+        }
+        if(calendar != null){
+            this.calendar = calendar;
+        }
+        this.time = time;
+        this.toggle = toggle;
+    }
+
+    public void set(@Nullable String value, @Nullable Calendar calendar, @Nullable long time, boolean toggle) {
+        if(value != null) {
+            this.value = value;
+        }
+        if(calendar != null){
+            this.calendar = calendar;
+        }
+        this.time = time;
+        this.toggle = toggle;
     }
 
     public void set(@Nullable String value, @Nullable Calendar calendar, @Nullable long time) {
@@ -87,5 +112,13 @@ public class Setting extends SugarRecord {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public boolean isToggle() {
+        return toggle;
+    }
+
+    public void setToggle(boolean toggle) {
+        this.toggle = toggle;
     }
 }

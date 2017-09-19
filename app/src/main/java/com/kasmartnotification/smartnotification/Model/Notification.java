@@ -123,9 +123,7 @@ public class Notification extends SugarRecord{
     }
 
     private boolean determinedImportant(){
-        ImportantSender matchedSender = SugarHelper.findFromDB(ImportantSender.class, title.toLowerCase());
-
-        return containsKeyword() || matchedSender != null;
+        return importantByKeyword() || importantBySender();
     }
 
     private boolean isTitleValid(){
@@ -144,7 +142,7 @@ public class Notification extends SugarRecord{
                 !message.equals("null");
     }
 
-    private boolean containsKeyword(){
+    public boolean importantByKeyword(){
         String message = this.message.toLowerCase();
         List<Keyword> keywords = Keyword.listAll(Keyword.class);
         for(Keyword keyword: keywords){
@@ -153,5 +151,10 @@ public class Notification extends SugarRecord{
             }
         }
         return false;
+    }
+
+    public boolean importantBySender(){
+        ImportantSender matchedSender = SugarHelper.findFromDB(ImportantSender.class, title.toLowerCase());
+        return matchedSender != null;
     }
 }

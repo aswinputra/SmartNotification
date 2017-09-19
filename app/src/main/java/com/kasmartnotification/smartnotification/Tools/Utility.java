@@ -10,6 +10,7 @@ import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.Model.Section;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 
 import java.util.ArrayList;
@@ -108,5 +109,16 @@ public class Utility {
 
     public static long millisecondToMin(long milli){
         return TimeUnit.MILLISECONDS.toMinutes(milli);
+    }
+
+    public static  <T> boolean getSwitchValue(T setting, final String type) {
+        boolean toggle;
+        if (setting!=null){
+            toggle = ((Setting)setting).isToggle();
+        }else{
+            toggle = false;
+            SugarHelper.createOrSetDBObject(Setting.class,type, null,null, null, 0, toggle);
+        }
+        return toggle;
     }
 }

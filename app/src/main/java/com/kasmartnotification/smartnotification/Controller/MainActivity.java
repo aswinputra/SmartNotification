@@ -29,6 +29,8 @@ import com.kasmartnotification.smartnotification.Services.SmartNotiService;
 import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 import com.kasmartnotification.smartnotification.Tools.Utility;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener {
 
     private FloatingActionButton smartNotiFab;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView untilTV;
     private TextView endTimeTV;
     private NotiBottomSheet bottomSheet;
+    private static DecimalFormat timeFormat = new DecimalFormat("#.#");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +121,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     if (intent.getAction().equals(Constants.PERIOD_TIME)) {
                         String time = intent.getStringExtra(Constants.REMAINING_TIME);
-                        timerTV.setText(time);
+                        double theTime = Integer.parseInt(time);
+                        if (theTime<=60){
+                            String focusTimer = Integer.toString((int)theTime);
+                            timerTV.setText(focusTimer);
+                            minutesTV.setText(R.string.minutes);
+                        }else {
+                            String focusTimer;
+                            if (getMinute(theTime)!=0){
+                                focusTimer = Integer.toString(getHour(theTime))+ ":" + Integer.toString(getMinute(theTime));
+                            }else{
+                                focusTimer = Integer.toString(getHour(theTime));
+                            }
+                            timerTV.setText(focusTimer);
+                            if (getHour(theTime)>1){
+                                minutesTV.setText(R.string.main_hour);
+                            }
+                            minutesTV.setText(R.string.main_hours);
+                        }
                         if (time.equals(Constants.END_TIMER)) {
                             timerTV.setText(Constants.ZERO);
                             Status status = SugarHelper.findFromDB(Status.class, Constants.PREVIOUS_TIMER);
@@ -314,5 +334,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             bottomSheet.collapseBottomSheet();
         }
+    }
+
+    private int getMinute(double time){
+        return (int)time%60;
+    }
+
+    private int getHour(double time){
+        return (int)time/60%24;
     }
 }

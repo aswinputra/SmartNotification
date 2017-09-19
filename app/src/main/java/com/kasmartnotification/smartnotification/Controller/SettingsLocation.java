@@ -11,7 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
 public class SettingsLocation extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +27,8 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_location);
 
+        boolean booleanSmartReminder = false;
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -31,15 +37,21 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
         reminderMessage = findViewById(R.id.activity_settings_location_reminder_messages_linear_layout);
         smartNotiReminderSwitch = findViewById(R.id.activity_settings_location_smart_noti_reminders_switch);
 
+        Setting smartReminderSetting = SugarHelper.findFromDB(Setting.class, Constants.SMART_REMINDER);
+        booleanSmartReminder = Utility.getSwitchValue(smartReminderSetting, Constants.SMART_REMINDER);
+        smartNotiReminderSwitch.setOnCheckedChangeListener(null);
+        smartNotiReminderSwitch.setChecked(booleanSmartReminder);
+
         smartNotiReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 //TODO: Do something when b is true
                 if (b){
-                    Toast.makeText(getApplicationContext(), "On",Toast.LENGTH_SHORT).show();
+
                 }else{
-                    Toast.makeText(getApplicationContext(), "Off", Toast.LENGTH_SHORT).show();
+
                 }
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null, null, null,0, b);
             }
         });
 
