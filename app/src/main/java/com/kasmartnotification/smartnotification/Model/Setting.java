@@ -7,7 +7,7 @@ import com.orm.SugarRecord;
 import java.util.Calendar;
 
 /**
- * Created by kiman on 29/8/17.
+ * Created by kiman toggle 29/8/17.
  */
 
 public class Setting extends SugarRecord {
@@ -15,7 +15,7 @@ public class Setting extends SugarRecord {
     private String name;
     private String value;
     private Calendar calendar;
-    private boolean on;
+    private boolean toggle;
 
     public Setting(){
 

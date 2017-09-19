@@ -1,10 +1,13 @@
 package com.kasmartnotification.smartnotification.Controller;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +17,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.kasmartnotification.smartnotification.LocationTools.LocationHelper;
+import com.kasmartnotification.smartnotification.LocationTools.MyGPSCallback;
+import com.kasmartnotification.smartnotification.LocationTools.MyGoogleLocationApiClient;
+import com.kasmartnotification.smartnotification.Model.Facet;
+import com.kasmartnotification.smartnotification.Services.LocationService;
 import com.kasmartnotification.smartnotification.Tools.CalendarHelper;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Setting;
@@ -29,17 +39,26 @@ import com.kasmartnotification.smartnotification.Services.SmartNotiService;
 import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 import com.kasmartnotification.smartnotification.Tools.Utility;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnSmartNotiStartListener {
+import static com.kasmartnotification.smartnotification.Constants.PERMISSION_ACCESS_COARSE_LOCATION;
+import static com.kasmartnotification.smartnotification.Constants.TURN_OFF;
+import static com.kasmartnotification.smartnotification.Constants.TURN_ON;
+import static com.kasmartnotification.smartnotification.Constants.TURN_ON_OFF;
+
+public class MainActivity extends AppCompatActivity implements
+        View.OnClickListener,
+        OnSmartNotiStartListener,
+        MyGPSCallback {
 
     private FloatingActionButton smartNotiFab;
     private BroadcastReceiver broadcastReceiver;
     private TextView nextBreakInTV;
     private TextView timerTV;
     private TextView minutesTV;
-    private TextView SmartNotiTV;
+    private TextView smartNotiTV;
     private TextView untilTV;
     private TextView endTimeTV;
     private NotiBottomSheet bottomSheet;
+    private SmartNotiDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nextBreakInTV = findViewById(R.id.activity_main_next_break_in);
         timerTV = findViewById(R.id.activity_main_focus_period_timer);
         minutesTV = findViewById(R.id.activity_main_minutes);
-        SmartNotiTV = findViewById(R.id.activity_main_smartnotification);
+        smartNotiTV = findViewById(R.id.activity_main_smartnotification);
         untilTV = findViewById(R.id.activity_main_until);
         endTimeTV = findViewById(R.id.activity_main_end_time);
         smartNotiFab = findViewById(R.id.activity_main_fab_smartnotification);
@@ -64,7 +83,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bottomSheet = new NotiBottomSheet(getApplicationContext(), this);
 
-        getPermission();
+        if(!Facet.hasSetDefaultValues()){
+            Facet.setDefaultValues();
+        }
+
+        LocationHelper.getLocationPermission(this, this);
+        getNotificationAccessPermission();
+
+        MyGoogleLocationApiClient client = new MyGoogleLocationApiClient(this);
+        client.setUpGPS(this, this);
+
+        handleIntentFromNotification();
+    }
+
+    private void handleIntentFromNotification() {
+        Intent intent = getIntent();
+        if(intent!=null) {
+            String action = intent.getStringExtra(TURN_ON_OFF);
+            if(action!=null) {
+                if (action.equals(TURN_ON)) {
+                    showSmartNotiDialog();
+                } else if (action.equals(TURN_OFF)) {
+                    stopSmartNoti();
+                }
+            }
+        }
+
     }
 
     @Override
@@ -83,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, Settings.class );
+            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
             return true;
         }
@@ -92,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void showSmartNotiDialog() {
-        SmartNotiDialog dialog = new SmartNotiDialog(this, this);
+        dialog = new SmartNotiDialog(this, this);
         dialog.setContentView(R.layout.smart_notification_dialog);
         dialog.show();
     }
@@ -190,6 +234,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null);
+
+        //this is to prevent leaking window
+        if(dialog != null && dialog.isShowing()){
+            dialog.dismiss();
+        }
+
         super.onStop();
     }
 
@@ -242,14 +292,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             nextBreakInTV.setVisibility(View.VISIBLE);
             timerTV.setVisibility(View.VISIBLE);
             minutesTV.setVisibility(View.VISIBLE);
-            SmartNotiTV.setVisibility(View.VISIBLE);
+            smartNotiTV.setVisibility(View.VISIBLE);
             untilTV.setVisibility(View.VISIBLE);
             endTimeTV.setVisibility(View.VISIBLE);
         } else {
             nextBreakInTV.setVisibility(View.GONE);
             timerTV.setVisibility(View.GONE);
             minutesTV.setVisibility(View.GONE);
-            SmartNotiTV.setVisibility(View.GONE);
+            smartNotiTV.setVisibility(View.GONE);
             untilTV.setVisibility(View.GONE);
             endTimeTV.setVisibility(View.GONE);
         }
@@ -299,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NotificationHelper.cancelSmartNotiNotification(this);
     }
 
-    private void getPermission() {
+    private void getNotificationAccessPermission() {
         if (!Utility.isNotificationListenEnabled(getApplicationContext())) {
             //TODO: show dialog asking to go to notification access setting
             Intent intent = new Intent(Constants.NOTIFICATION_ACCESS_SETTING);
@@ -315,4 +365,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bottomSheet.collapseBottomSheet();
         }
     }
+
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ACCESS_COARSE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // All good!
+                    //TODO: start with when the setting is turned off and STOP it when the setting is turned off
+                    startService(new Intent(this, LocationService.class));
+                } else {
+                    Toast.makeText(this, "Need your location!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void OnGPSResult(int statusCode) {
+        if (statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
+            Toast.makeText(this, "GPS is unavailable", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

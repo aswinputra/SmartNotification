@@ -12,4 +12,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/activity_settings_places_recycler_view">
     </android.support.v7.widget.RecyclerView>
+
 </android.support.constraint.ConstraintLayout>

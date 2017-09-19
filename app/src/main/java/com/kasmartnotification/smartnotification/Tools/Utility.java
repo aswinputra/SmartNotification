@@ -1,10 +1,15 @@
 package com.kasmartnotification.smartnotification.Tools;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
@@ -95,5 +100,19 @@ public class Utility {
 
         }
         return names;
+    }
+
+    public static boolean hasPlayServices(Context context, Activity activity) {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(context);
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(activity, result, Constants.PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }
+            Toast.makeText(context, "Can't connect to Google play services", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Log.i(Constants.MISC, "It supports google play services");
+        return true;
     }
 }

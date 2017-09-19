@@ -12,6 +12,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Services.LocationService;
 
 public class SettingsLocation extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,9 +37,9 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 //TODO: Do something when b is true
                 if (b){
-                    Toast.makeText(getApplicationContext(), "On",Toast.LENGTH_SHORT).show();
+                    startService(new Intent(SettingsLocation.this, LocationService.class));
                 }else{
-                    Toast.makeText(getApplicationContext(), "Off", Toast.LENGTH_SHORT).show();
+                    stopService(new Intent(SettingsLocation.this, LocationService.class));
                 }
             }
         });

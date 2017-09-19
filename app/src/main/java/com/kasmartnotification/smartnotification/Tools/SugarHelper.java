@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.BlackListPackage;
-import com.kasmartnotification.smartnotification.Model.Message;
+import com.kasmartnotification.smartnotification.Model.ReminderMessage;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
 import com.orm.SugarRecord;
@@ -41,6 +41,12 @@ public class SugarHelper {
                 pkg = new BlackListPackage(name);
                 pkg.save();
             }
+        } else if (type == ReminderMessage.class) {
+            ReminderMessage message = findFromDB(ReminderMessage.class, name);
+            if (message == null && content != null) {
+                message = new ReminderMessage(name, content);
+                message.save();
+            }
         }
     }
 
@@ -62,12 +68,12 @@ public class SugarHelper {
         return smartNotiStatus != null && smartNotiStatus.isRunning() || smartNotiUnbounded != null;
     }
 
-    public static boolean isFocusTimerOn(){
+    public static boolean isFocusTimerOn() {
         Status focusTimerStatus = findFromDB(Status.class, Constants.FOCUS_TIMER);
         return focusTimerStatus != null && focusTimerStatus.isRunning();
     }
 
-    public static boolean isBreakTimerOn(){
+    public static boolean isBreakTimerOn() {
         Status breakTimerStatus = findFromDB(Status.class, Constants.BREAK_TIMER);
         return breakTimerStatus != null && breakTimerStatus.isRunning();
     }

@@ -68,7 +68,7 @@ public class KeywordsAdapter extends RecyclerView.Adapter<KeywordsAdapter.Keywor
         }
 
         private void showEditDialog(int adapterPosition) {
-            EditDialog editDialog = new EditDialog(mContext, mKeywords.get(adapterPosition),this);
+            EditDialog editDialog = new EditDialog(mContext, mKeywords.get(adapterPosition),this, true);
         }
 
         @Override

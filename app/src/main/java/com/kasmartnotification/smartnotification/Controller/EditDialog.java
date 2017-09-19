@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.kasmartnotification.smartnotification.Interfaces.OnDialogClickedListener;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
+import com.kasmartnotification.smartnotification.Model.ReminderMessage;
 import com.kasmartnotification.smartnotification.R;
 
 /**
@@ -23,7 +24,7 @@ public class EditDialog extends AlertDialog {
 
     private Context mContext;
 
-    public EditDialog(@NonNull Context context, final Object object, final OnDialogClickedListener listener) {
+    public EditDialog(@NonNull Context context, final Object object, final OnDialogClickedListener listener, boolean needsDelete) {
         super(context);
         mContext = context;
 
@@ -39,6 +40,8 @@ public class EditDialog extends AlertDialog {
             builder.setTitle("Edit name");
         } else if (object instanceof Keyword) {
             builder.setTitle("Edit keyword");
+        } else if (object instanceof ReminderMessage){
+            builder.setTitle("Edit reminder message");
         }
 
         final EditText input = new EditText(mContext);
@@ -48,6 +51,8 @@ public class EditDialog extends AlertDialog {
             input.setText(((ImportantSender) object).getName());
         } else if (object instanceof Keyword) {
             input.setText(((Keyword) object).getName());
+        } else if  (object instanceof ReminderMessage) {
+            input.setText(((ReminderMessage) object).getName());
         }
         container.addView(input);
         builder.setView(container);
@@ -64,12 +69,14 @@ public class EditDialog extends AlertDialog {
                 dialog.cancel();
             }
         });
-        builder.setNeutralButton("Delete", new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                listener.onDelete(object);
-            }
-        });
+        if(needsDelete) {
+            builder.setNeutralButton("Remove", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    listener.onDelete(object);
+                }
+            });
+        }
         builder.show();
     }
 
