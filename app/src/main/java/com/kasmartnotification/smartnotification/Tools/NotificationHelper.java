@@ -1,5 +1,6 @@
 package com.kasmartnotification.smartnotification.Tools;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -9,10 +10,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.AudioAttributesCompat;
 import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
@@ -72,6 +76,21 @@ public class NotificationHelper {
                 .setColorized(true)
                 .setSound(soundPath)
                 .setVibrate(vibrationPattern);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            // Do something for Oreo and above versions
+            NotificationChannel mImportantChannel = new NotificationChannel(Constants.IMPORTANT, "Smart Notification", NotificationManager.IMPORTANCE_HIGH);
+            mImportantChannel.setDescription(notification.getMessage());
+            mImportantChannel.enableLights(true);
+            mImportantChannel.enableVibration(true);
+            mImportantChannel.setVibrationPattern(vibrationPattern);
+            mImportantChannel.setLightColor(color);
+            mImportantChannel.setSound(soundPath, mImportantChannel.getAudioAttributes());
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(mImportantChannel);
+            }
+        }
+
 
         Icon appIcon = notification.getAppIcon();
         if (appIcon != null) {

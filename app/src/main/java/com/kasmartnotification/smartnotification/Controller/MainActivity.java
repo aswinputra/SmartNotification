@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else {
                             String focusTimer;
                             if (getMinute(theTime)!=0){
-                                focusTimer = Integer.toString(getHour(theTime))+ ":" + Integer.toString(getMinute(theTime));
+                                focusTimer = String.format("%d:%02d",getHour(theTime) , getMinute(theTime));
                             }else{
                                 focusTimer = Integer.toString(getHour(theTime));
                             }

@@ -10,6 +10,9 @@ import com.orm.SugarRecord;
 
 import java.util.List;
 
+import static com.kasmartnotification.smartnotification.Tools.SugarHelper.allowImportantKeyword;
+import static com.kasmartnotification.smartnotification.Tools.SugarHelper.allowImportantSender;
+
 /**
  * Created by kiman on 1/9/17.
  */
@@ -123,7 +126,7 @@ public class Notification extends SugarRecord{
     }
 
     private boolean determinedImportant(){
-        return importantByKeyword() || importantBySender();
+        return importantBySender()||importantByKeyword();
     }
 
     private boolean isTitleValid(){
@@ -143,18 +146,25 @@ public class Notification extends SugarRecord{
     }
 
     public boolean importantByKeyword(){
-        String message = this.message.toLowerCase();
-        List<Keyword> keywords = Keyword.listAll(Keyword.class);
-        for(Keyword keyword: keywords){
-            if(message.contains(keyword.getName())){
-                return true;
+        if (allowImportantKeyword()) {
+            String message = this.message.toLowerCase();
+            List<Keyword> keywords = Keyword.listAll(Keyword.class);
+            for (Keyword keyword : keywords) {
+                if (message.contains(keyword.getName())) {
+                    return true;
+                }
             }
         }
         return false;
+
     }
 
     public boolean importantBySender(){
-        ImportantSender matchedSender = SugarHelper.findFromDB(ImportantSender.class, title.toLowerCase());
-        return matchedSender != null;
+        if (allowImportantSender()) {
+            ImportantSender matchedSender = SugarHelper.findFromDB(ImportantSender.class, title.toLowerCase());
+            return matchedSender != null;
+        }else{
+            return false;
+        }
     }
 }

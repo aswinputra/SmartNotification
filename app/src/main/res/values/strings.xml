@@ -30,7 +30,7 @@
     <string name="time">Time</string>
     <string name="location">Location</string>
     <string name="activity">Activity</string>
-    <string name="keywords"><![CDATA[Keywords, Senders & response]]></string>
+    <string name="keywords"><![CDATA[Keywords, Senders & Response]]></string>
     <string name="focus_period">Focus Period</string>
     <string name="focus_period_test">6</string>
     <string name="hours">hours</string>
@@ -60,7 +60,7 @@
     <string name="settings_keywords">Keywords</string>
     <string name="keywords_descriptions">“Need your response now”, “Urgent”</string>
     <string name="automatic_response">Automatic response</string>
-    <string name="automatic_response_descriptions">The reply message above will be replied when a message does not contain any keywords or is not from an important sender</string>
+    <string name="automatic_response_descriptions">The reply message below will be replied when a message does not contain any keywords or is not from an important sender</string>
     <string name="reply_messages">Reply Messages</string>
     <string name="reply_messages_descriptions">“I am not available at the moment, please me again at %NEXTBREAKTIME”</string>
     <string name="title_activity_settings_important_senders">SettingsImportantSenders</string>

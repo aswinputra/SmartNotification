@@ -107,4 +107,22 @@ public class SugarHelper {
             return null;
         }
     }
+
+    public static boolean allowImportantSender() {
+        Setting allowSender = findFromDB(Setting.class, Constants.IMPORTANT_SENDER);
+        if (allowSender!=null){
+            return allowSender.isToggle();
+        }else{
+            return false;
+        }
+    }
+
+    public static boolean allowImportantKeyword() {
+        Setting allowKeyword = findFromDB(Setting.class, Constants.IMPORTANT_KEYWORDS);
+        if (allowKeyword!=null) {
+            return allowKeyword.isToggle();
+        }else {
+            return false;
+        }
+    }
 }

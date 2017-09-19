@@ -29,6 +29,9 @@ import com.kasmartnotification.smartnotification.Tools.NotificationHelper;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Tools.SugarHelper;
 
+import static com.kasmartnotification.smartnotification.Tools.SugarHelper.allowImportantKeyword;
+import static com.kasmartnotification.smartnotification.Tools.SugarHelper.allowImportantSender;
+
 /**
  * Created by kiman on 1/9/17.
  */
@@ -123,14 +126,10 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
     public void onNotiAdded(Notification notification) {
         update();
         //if the sender important Settings ON
-        if (allowImportantSender()) {
-            if (notification.importantBySender()) {
+        if (notification.importantBySender()){
+            NotificationHelper.notify(context, notification, true);
+        }else if (notification.importantByKeyword()) {
                 NotificationHelper.notify(context, notification, true);
-            }
-        } else if (allowImportantKeyword()) {
-            if (notification.importantByKeyword()) {
-                NotificationHelper.notify(context, notification, true);
-            }
         }
     }
 
@@ -195,21 +194,4 @@ public class NotiBottomSheet implements NotificationUpdateListener, View.OnClick
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
-    public boolean allowImportantSender() {
-        Setting allowSender = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_SENDER);
-        if (allowSender!=null){
-            return allowSender.isToggle();
-        }else{
-            return false;
-        }
-    }
-
-    public boolean allowImportantKeyword() {
-        Setting allowKeyword = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_KEYWORDS);
-        if (allowKeyword!=null) {
-            return allowKeyword.isToggle();
-        }else {
-            return false;
-        }
-    }
 }
