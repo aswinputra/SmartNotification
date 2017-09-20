@@ -11,7 +11,8 @@
         app:layout_constraintTop_toBottomOf="parent"
         android:orientation="horizontal"
         android:id="@+id/activity_settings_location_smart_noti_reminders_linear_layout"
-        android:weightSum="100">
+        android:weightSum="100"
+        style="@style/MyFlatButton">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,15 +23,15 @@
                 android:layout_height="wrap_content"
                 style="@style/TextRadioButton"
                 android:text="@string/smart_notification_reminders"
-                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+                android:layout_marginStart="@dimen/margin_top_function"
                 android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
                 android:layout_marginTop="@dimen/activity_settings_linear_layout_paddingTopBottom"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+                android:layout_marginStart="@dimen/margin_top_function"
                 android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-                android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
+                android:layout_marginBottom="@dimen/margin_top_function"
                 android:text="@string/smart_noti_reminders_descriptions" />
         </LinearLayout>
         <Switch
@@ -42,49 +43,58 @@
             android:layout_gravity="center"
             android:id="@+id/activity_settings_location_smart_noti_reminders_switch"/>
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/activity_settings_location_places_linear_layout"
+        style="@style/MyFlatButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/activity_settings_location_smart_noti_reminders_linear_layout"
-        android:id="@+id/activity_settings_location_places_linear_layout">
+        app:layout_constraintTop_toBottomOf="@id/activity_settings_location_smart_noti_reminders_linear_layout">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             style="@style/TextRadioButton"
-            android:text="@string/places"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
-            android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-            android:layout_marginTop="@dimen/margin_top_function"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_gravity="start"
             android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-            android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-            android:text="@string/places_text_description"
-            android:id="@+id/activity_settings_location_places_text_view"/>
+            android:layout_marginStart="@dimen/margin_top_function"
+            android:layout_marginTop="@dimen/margin_top_function"
+            android:text="@string/places" />
+
+        <TextView
+            android:id="@+id/activity_settings_location_places_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
+            android:layout_marginStart="@dimen/margin_top_function"
+            android:layout_marginBottom="@dimen/margin_top_function"
+            android:text="@string/places_text_description" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/activity_settings_location_reminder_messages_linear_layout"
-        app:layout_constraintTop_toBottomOf="@id/activity_settings_location_places_linear_layout">
+        app:layout_constraintTop_toBottomOf="@id/activity_settings_location_places_linear_layout"
+        style="@style/MyFlatButton">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextRadioButton"
             android:text="@string/reminder_messages"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_marginStart="@dimen/margin_top_function"
             android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-            android:layout_marginTop="@dimen/margin_top_function"/>
+            android:layout_marginTop="@dimen/margin_top_function"
+            android:layout_gravity="start" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reminder_message_text_description"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+            android:layout_marginStart="@dimen/margin_top_function"
             android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-            android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"/>
+            android:layout_marginBottom="@dimen/margin_top_function"
+            android:layout_gravity="start"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

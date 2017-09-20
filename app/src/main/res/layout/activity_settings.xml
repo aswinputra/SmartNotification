@@ -14,7 +14,8 @@
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:background="@drawable/linear_layout_border"
-        android:weightSum="100">
+        android:weightSum="100"
+        style="@style/MyFlatButton">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -37,7 +38,8 @@
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:background="@drawable/linear_layout_border"
-        android:weightSum="100">
+        android:weightSum="100"
+        style="@style/MyFlatButton">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,7 +62,8 @@
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:background="@drawable/linear_layout_border"
-        android:weightSum="100">
+        android:weightSum="100"
+        style="@style/MyFlatButton">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +86,8 @@
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:background="@drawable/linear_layout_border"
-        android:weightSum="100">
+        android:weightSum="100"
+        style="@style/MyFlatButton">
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -3,22 +3,24 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/adapter_places_linear_layout">
+    android:id="@+id/adapter_places_linear_layout"
+    android:gravity="start"
+    style="@style/MyFlatButton">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/home"
         style="@style/TextRadioButton"
-        android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+        android:layout_marginStart="@dimen/margin_top_function"
         android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-        android:layout_marginTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
+        android:layout_marginTop="@dimen/margin_top_function"
         android:id="@+id/activity_settings_location_places_adapter_places"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/adapter_address"
         android:id="@+id/activity_settings_location_places_adapter_address"
-        android:layout_marginStart="@dimen/activity_settings_time_margin_start"
+        android:layout_marginStart="@dimen/margin_top_function"
         android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-        android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"/>
+        android:layout_marginBottom="@dimen/margin_top_function"/>
 </LinearLayout>

@@ -14,7 +14,8 @@
         android:orientation="horizontal"
         android:weightSum="100"
         app:layout_constraintTop_toBottomOf="parent"
-        android:background="@drawable/linear_layout_border">
+        android:background="@drawable/linear_layout_border"
+        style="@style/MyFlatButton">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

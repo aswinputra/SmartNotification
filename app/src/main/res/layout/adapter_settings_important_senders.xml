@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/noti_top_padding"
     android:id="@+id/adapter_important_senders_linear_layout"
-    android:background="@drawable/linear_layout_border">
+    style="@style/MyFlatButton"
+    android:gravity="start">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/adapter_settings_important_sender_imageview"
         android:layout_width="70dp"

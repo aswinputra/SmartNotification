@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/adapter_keywords_linear_layout"
-    android:background="@drawable/linear_layout_border">
+    android:background="@drawable/linear_layout_border"
+    style="@style/MyFlatButton">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,6 +13,7 @@
         android:layout_marginStart="@dimen/activity_settings_time_margin_start"
         android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
         android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
+        android:layout_gravity="start"
         android:id="@+id/adapter_keywords"
         style="@style/TextRadioButton"/>
 </LinearLayout>
