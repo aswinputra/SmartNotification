@@ -64,7 +64,7 @@ public class Constants {
     public static final int LOCATION_REFRESH_TIME = 3 * 60000; //60000 millis = 1 min
     public static final int LOCATION_FAST_REFRESH_TIME = 6000; //60000 millis = 1 min
 
-    public static final int LOCATION_ACCURACY = 45; //metres
+    public static final int LOCATION_ACCURACY = 65; //metres
     public static final String USER_LOCATION = "USER_LOCATION";
 
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 7709;
