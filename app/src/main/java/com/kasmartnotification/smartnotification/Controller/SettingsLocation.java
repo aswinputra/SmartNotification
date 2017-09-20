@@ -9,14 +9,24 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kasmartnotification.smartnotification.Model.Place;
+import com.kasmartnotification.smartnotification.Model.ReminderMessage;
+import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Services.LocationService;
+import com.kasmartnotification.smartnotification.Tools.SugarHelper;
+import com.kasmartnotification.smartnotification.Tools.Utility;
+import com.orm.SugarRecord;
+
+import java.util.List;
 
 public class SettingsLocation extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout smartNotiReminder, places, reminderMessage;
+    private TextView reminderMessageTV, placesTV;
     private Switch smartNotiReminderSwitch;
 
     @Override
@@ -29,7 +39,25 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
 
         smartNotiReminder=findViewById(R.id.activity_settings_location_smart_noti_reminders_linear_layout);
         places = findViewById(R.id.activity_settings_location_places_linear_layout);
+        placesTV = findViewById(R.id.activity_settings_location_places_text_view);
+
+        List<Place> placesList = SugarRecord.listAll(Place.class);
+        if (!placesList.isEmpty()){
+            placesTV.setText(Utility.getNames(placesList));
+        }else{
+            placesTV.setText("Add your Places here");
+        }
+
         reminderMessage = findViewById(R.id.activity_settings_location_reminder_messages_linear_layout);
+        reminderMessageTV = findViewById(R.id.activity_settings_location_reminder_messages_text_view);
+
+        List<ReminderMessage> messages = SugarRecord.listAll(ReminderMessage.class);
+        if (!messages.isEmpty()){
+            reminderMessageTV.setText(Utility.getNames(messages));
+        }else {
+            reminderMessageTV.setText("Add your own messages here");
+        }
+
         smartNotiReminderSwitch = findViewById(R.id.activity_settings_location_smart_noti_reminders_switch);
 
         smartNotiReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

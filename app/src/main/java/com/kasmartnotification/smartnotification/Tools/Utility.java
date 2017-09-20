@@ -14,6 +14,8 @@ import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.Model.Notifications;
+import com.kasmartnotification.smartnotification.Model.Place;
+import com.kasmartnotification.smartnotification.Model.ReminderMessage;
 import com.kasmartnotification.smartnotification.Model.Section;
 import com.kasmartnotification.smartnotification.Model.Status;
 
@@ -95,6 +97,14 @@ public class Utility {
                     for(int i = 0; i<lists.size(); i++){
                         names.add(((ImportantSender) lists.get(i)).getName());
                     }
+                }else if (lists.get(0)instanceof ReminderMessage){
+                    for(int i = 0; i<lists.size(); i++){
+                        names.add(((ReminderMessage) lists.get(i)).getName());
+                    }
+                }else if (lists.get(0)instanceof Place){
+                    for(int i = 0; i<lists.size(); i++){
+                        names.add(((ReminderMessage) lists.get(i)).getName());
+                    }
                 }
             }
 
@@ -114,5 +124,23 @@ public class Utility {
         }
         Log.i(Constants.MISC, "It supports google play services");
         return true;
+    }
+
+    public static <T> String getNames(List<T> list){
+        String name = "";
+        int count = 0;
+        for (String names : getNamesList(list)){
+            if (count <= 3){
+                if (count==getNamesList(list).size()-1||count==3){
+                    name = name + names;
+                }else{
+                    name = name + names + ", ";
+                }
+            }else if(count == list.size()-1||count==4){
+                name = name + names;
+            }
+            count++;
+        }
+        return name;
     }
 }

@@ -42,7 +42,7 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         List<ImportantSender> senders = ImportantSender.listAll(ImportantSender.class);
 
         if (!senders.isEmpty()){
-            importantSendersTextView.setText(getNames(senders));
+            importantSendersTextView.setText(Utility.getNames(senders));
         }else{
             importantSendersTextView.setText("Add your Important Senders here");
         }
@@ -65,7 +65,7 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
 
         List<Keyword> keywordsList = Keyword.listAll(Keyword.class);
         if (!keywordsList.isEmpty()){
-            keywordsTextView.setText(getNames(keywordsList));
+            keywordsTextView.setText(Utility.getNames(keywordsList));
         }else{
             keywordsTextView.setText("Add your Keywords here");
         }
@@ -142,21 +142,5 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         }
     }
 
-    public <T> String getNames(List<T> list){
-        String name = "";
-        int count = 0;
-        for (String names : Utility.getNamesList(list)){
-            if (count <= 3){
-                if (count==Utility.getNamesList(list).size()-1||count==3){
-                    name = name + names;
-                }else{
-                    name = name + names + ", ";
-                }
-            }else if(count == list.size()-1||count==4){
-                name = name + names;
-            }
-            count++;
-        }
-        return name;
-    }
+
 }

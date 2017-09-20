@@ -85,6 +85,8 @@
             android:text="@string/reminder_message_text_description"
             android:layout_marginStart="@dimen/activity_settings_time_margin_start"
             android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
-            android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"/>
+            android:layout_marginBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
+            android:id="@+id/activity_settings_location_reminder_messages_text_view"
+            android:maxLines="1"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
