@@ -61,8 +61,8 @@ public class Constants {
     public static final int FINE_LOCATION_REQUEST_CODE = 7707;
     public static final int GPS_REQUEST_CODE = 7708;
 
-    public static final int LOCATION_REFRESH_TIME = 2 * 60000; //60000 millis = 1 min
-    public static final int LOCATION_FAST_REFRESH_TIME = 3000; //60000 millis = 1 min
+    public static final int LOCATION_REFRESH_TIME = 3 * 60000; //60000 millis = 1 min
+    public static final int LOCATION_FAST_REFRESH_TIME = 6000; //60000 millis = 1 min
 
     public static final int LOCATION_ACCURACY = 45; //metres
     public static final String USER_LOCATION = "USER_LOCATION";

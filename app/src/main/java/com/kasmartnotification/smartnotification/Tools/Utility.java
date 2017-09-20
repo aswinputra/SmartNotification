@@ -87,6 +87,14 @@ public class Utility {
                     for(int i = 0; i<4; i++){
                         names.add(((ImportantSender) lists.get(i)).getName());
                     }
+                }else if (lists.get(0)instanceof ReminderMessage){
+                    for(int i = 0; i<4; i++){
+                        names.add(((ReminderMessage) lists.get(i)).getName());
+                    }
+                }else if (lists.get(0)instanceof Place){
+                    for(int i = 0; i<4; i++){
+                        names.add(((Place) lists.get(i)).getName());
+                    }
                 }
             }else{
                 if (lists.get(0) instanceof Keyword){
@@ -103,7 +111,7 @@ public class Utility {
                     }
                 }else if (lists.get(0)instanceof Place){
                     for(int i = 0; i<lists.size(); i++){
-                        names.add(((ReminderMessage) lists.get(i)).getName());
+                        names.add(((Place) lists.get(i)).getName());
                     }
                 }
             }
