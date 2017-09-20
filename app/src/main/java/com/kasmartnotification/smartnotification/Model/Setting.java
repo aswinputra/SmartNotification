@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by kiman on 29/8/17.
+ * Created by kiman toggle 29/8/17.
  */
 
 public class Setting extends SugarRecord {
@@ -18,7 +18,6 @@ public class Setting extends SugarRecord {
     private long time;
     private Calendar calendar;
     private boolean toggle;
-//    private ArrayList<Object> Lists;
 
     public Setting(){
 

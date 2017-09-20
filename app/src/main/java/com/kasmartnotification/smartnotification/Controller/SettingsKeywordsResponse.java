@@ -45,14 +45,14 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         boolean booleanAutoResponse = false;
 
         Setting allowImportantSndrSetting = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_SENDER);
-        booleanSender = getSwitchValue(allowImportantSndrSetting, Constants.IMPORTANT_SENDER);
+        booleanSender = Utility.getSwitchValue(allowImportantSndrSetting, Constants.IMPORTANT_SENDER);
         allowImportantSendersSwitch.setOnCheckedChangeListener(null);
         allowImportantSendersSwitch.setChecked(booleanSender);
 
         List<ImportantSender> senders = ImportantSender.listAll(ImportantSender.class);
 
         if (!senders.isEmpty()){
-            importantSendersTextView.setText(getNames(senders));
+            importantSendersTextView.setText(Utility.getNames(senders));
         }else{
             importantSendersTextView.setText("Add your Important Senders here");
         }
@@ -77,13 +77,13 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         keywordsTextView = findViewById(R.id.activity_settings_keywords_response_keywords_text_view);
 
         Setting allowKeywordsSetting = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_KEYWORDS);
-        booleanKeyword = getSwitchValue(allowKeywordsSetting, Constants.IMPORTANT_KEYWORDS);
+        booleanKeyword = Utility.getSwitchValue(allowKeywordsSetting, Constants.IMPORTANT_KEYWORDS);
         allowKeywordsSwitch.setOnCheckedChangeListener(null);
         allowKeywordsSwitch.setChecked(booleanKeyword);
 
         List<Keyword> keywordsList = Keyword.listAll(Keyword.class);
         if (!keywordsList.isEmpty()){
-            keywordsTextView.setText(getNames(keywordsList));
+            keywordsTextView.setText(Utility.getNames(keywordsList));
         }else{
             keywordsTextView.setText("Add your Keywords here");
         }
@@ -105,7 +105,7 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         automaticResponseSwitch = findViewById(R.id.activity_settings_keywords_response_automatic_response_switch);
 
         Setting automaticResponseSetting = SugarHelper.findFromDB(Setting.class, Constants.AUTOMATIC_RESPONSE);
-        booleanAutoResponse = getSwitchValue(automaticResponseSetting, Constants.AUTOMATIC_RESPONSE);
+        booleanAutoResponse = Utility.getSwitchValue(automaticResponseSetting, Constants.AUTOMATIC_RESPONSE);
         automaticResponseSwitch.setOnCheckedChangeListener(null);
         automaticResponseSwitch.setChecked(booleanAutoResponse);
 
@@ -166,34 +166,5 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
                 //TODO: automatic response page
                 break;
         }
-    }
-
-    public <T> String getNames(List<T> list){
-        String name = "";
-        int count = 0;
-        for (String names : Utility.getNamesList(list)){
-            if (count <= 3){
-                if (count==Utility.getNamesList(list).size()-1||count==3){
-                    name = name + names;
-                }else{
-                    name = name + names + ", ";
-                }
-            }else if(count == list.size()-1||count==4){
-                name = name + names;
-            }
-            count++;
-        }
-        return name;
-    }
-
-    private <T> boolean getSwitchValue(T setting, final String type) {
-        boolean toggle;
-        if (setting!=null){
-            toggle = ((Setting)setting).isToggle();
-        }else{
-            toggle = false;
-            SugarHelper.createOrSetDBObject(Setting.class,type, null,null, null, 0, toggle);
-        }
-        return toggle;
     }
 }

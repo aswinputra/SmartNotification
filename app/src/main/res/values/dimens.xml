@@ -3,6 +3,7 @@
     <dimen name="activity_margin">16dp</dimen>
     <dimen name="noti_top_padding">12dp</dimen>
     <dimen name="app_icon_hint">20dp</dimen>
+    <dimen name="delete_dialog_margin">24dp</dimen>
 
     <dimen name="smart_notification_top_margin">50dp</dimen>
     <dimen name="smart_notification_height">200dp</dimen>
@@ -26,4 +27,5 @@
     <dimen name="settings_weight_text_view">85</dimen>
     <dimen name="activity_settings_keyword_response_margin_start_end">10dp</dimen>
 
+    <dimen name="fab_border_width">0dp</dimen>
 </resources>

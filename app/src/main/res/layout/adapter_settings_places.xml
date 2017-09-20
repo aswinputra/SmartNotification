@@ -9,7 +9,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/home"
         style="@style/TextRadioButton"
         android:layout_marginStart="@dimen/margin_top_function"
         android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
@@ -18,7 +17,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/adapter_address"
         android:id="@+id/activity_settings_location_places_adapter_address"
         android:layout_marginStart="@dimen/margin_top_function"
         android:layout_marginEnd="@dimen/activity_settings_time_margin_start"

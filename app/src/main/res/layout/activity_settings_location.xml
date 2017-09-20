@@ -95,6 +95,8 @@
             android:layout_marginStart="@dimen/margin_top_function"
             android:layout_marginEnd="@dimen/activity_settings_time_margin_start"
             android:layout_marginBottom="@dimen/margin_top_function"
-            android:layout_gravity="start"/>
+            android:layout_gravity="start"
+            android:id="@+id/activity_settings_location_reminder_messages_text_view"
+            android:maxLines="1"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

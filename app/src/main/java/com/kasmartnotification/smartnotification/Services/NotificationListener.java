@@ -66,6 +66,7 @@ public class NotificationListener extends NotificationListenerService {
                 notifications.add(newNoti);
             }
 
+            //This is to ensure that our important notifications get alerts
             if(!sbn.getPackageName().equals(Constants.PACKAGE_NAME)) {
                 cancelNotification(sbn.getKey());
             }

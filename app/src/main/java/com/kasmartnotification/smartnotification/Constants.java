@@ -19,6 +19,7 @@ public class Constants {
     public static final String MISC = "MISC_LOG";
     public static final String EXCEPTION = "EXCEPTION_LOG";
     public static final String TEST = "TEST_LOG";
+    public static final String LOCATION_LOG = "LOCATION_LOG";
 
     public static final String SMART_NOTIFICATION = "SMART_NOTIFICATION";
     public static final String SMART_NOTIFICATION_UNBOUNDED = "SMART_NOTIFICATION_UNBOUNDED";
@@ -39,8 +40,13 @@ public class Constants {
 
     public static final String IMPORTANT = "IMPORTANT";
     public static final String STATUS = "STATUS";
-    public static final int NOTIFICATION_ID = 766;
-    public static final int STATUS_NOTIFICATION_ID = 765;
+    public static final int REMINDER_NOTIFICATION_ID = 7700;
+    public static final int STATUS_NOTIFICATION_ID = 7701;
+    public static final int SMART_NOTIFICATION_ON_CODE = 7702;
+    public static final int SMART_NOTIFICATION_OFF_CODE = 7703;
+    public static final String TURN_ON = "TURN ON";
+    public static final String TURN_OFF = "TURN OFF";
+    public static final String TURN_ON_OFF = "TURN ON OFF";
 
     public static String PACKAGE_NAME;
 
@@ -55,4 +61,17 @@ public class Constants {
     public static final String AUTOMATIC_RESPONSE = "AUTOMATIC_RESPONSE";
     public static final String IMPORTANT_KEYWORDS = "IMPORTANT_KEYWORD";
 
+    public static final int PERMISSION_ACCESS_COARSE_LOCATION = 7705;
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 7706;
+    public static final int FINE_LOCATION_REQUEST_CODE = 7707;
+    public static final int GPS_REQUEST_CODE = 7708;
+
+    public static final int LOCATION_REFRESH_TIME = 3 * 60000; //60000 millis = 1 min
+    public static final int LOCATION_FAST_REFRESH_TIME = 6000; //60000 millis = 1 min
+
+    public static final int LOCATION_ACCURACY = 65; //metres
+    public static final String USER_LOCATION = "USER_LOCATION";
+
+    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 7709;
+    public static final double BOUND_BIAS_RADIUS_METERS = 50000; //50KM
 }

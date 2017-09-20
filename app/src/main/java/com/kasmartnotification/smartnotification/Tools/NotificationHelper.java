@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,7 +24,13 @@ import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Controller.MainActivity;
 import com.kasmartnotification.smartnotification.Model.Notification;
 import com.kasmartnotification.smartnotification.Model.Notifications;
+import com.kasmartnotification.smartnotification.Model.ReminderMessage;
 import com.kasmartnotification.smartnotification.R;
+
+import java.util.List;
+import java.util.Random;
+
+import static com.kasmartnotification.smartnotification.Constants.TURN_ON_OFF;
 
 /**
  * Created by kiman on 14/9/17.
@@ -31,9 +38,11 @@ import com.kasmartnotification.smartnotification.R;
 
 public class NotificationHelper {
 
-    public static void notifyAll(Context context){
+    private static long[] vibrationPattern = {0, 200, 100, 200}; //sleep, vibrate, sleep, vibrate
+
+    public static void notifyAll(Context context) {
         Notifications notifications = Notifications.getInstance();
-        for(Notification notification: notifications.getNotificationList()){
+        for (Notification notification : notifications.getNotificationList()) {
             notify(context, notification, notification.isImportant());
             try {
                 Thread.sleep(500);
@@ -56,17 +65,10 @@ public class NotificationHelper {
                 0,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Uri soundPath;
-        if(important) {
-            soundPath = Uri.parse("android.resource://com.kasmartnotification.smartnotification/raw/rhea");
-        }else{
-            soundPath = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
 
-        long[] vibrationPattern = {0, 200, 100, 200}; //sleep, vibrate, sleep, vibrate
         int color = ContextCompat.getColor(context, R.color.colorPrimary);
 
-        NotificationCompat.Builder importantNoti =  new NotificationCompat.Builder(context, Constants.IMPORTANT)
+        NotificationCompat.Builder importantNoti = new NotificationCompat.Builder(context, Constants.IMPORTANT)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(notification.getTitle())
                 .setContentText(notification.getMessage())
@@ -74,8 +76,26 @@ public class NotificationHelper {
                 .setAutoCancel(true)
                 .setColor(color)
                 .setColorized(true)
-                .setSound(soundPath)
                 .setVibrate(vibrationPattern);
+
+
+        Icon appIcon = notification.getAppIcon();
+        if (appIcon != null) {
+            Drawable drawable = appIcon.loadDrawable(context);
+            Bitmap bitmap = ImageDecoder.convertDrawableToBitmap(drawable);
+            bitmap = ImageDecoder.changeImageColor(bitmap, notification.getColor());
+            importantNoti.setLargeIcon(bitmap);
+        }
+
+        Uri soundPath;
+        if (important) {
+            soundPath = Uri.parse("android.resource://com.kasmartnotification.smartnotification/raw/rhea");
+            importantNoti.setPriority(android.app.Notification.PRIORITY_HIGH); //trigger heads-up notification
+        } else {
+            soundPath = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        }
+
+        importantNoti.setSound(soundPath);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             // Do something for Oreo and above versions
@@ -91,21 +111,12 @@ public class NotificationHelper {
             }
         }
 
-
-        Icon appIcon = notification.getAppIcon();
-        if (appIcon != null) {
-            Drawable drawable = appIcon.loadDrawable(context);
-            Bitmap bitmap = ImageDecoder.convertDrawableToBitmap(drawable);
-            bitmap = ImageDecoder.changeImageColor(bitmap, notification.getColor());
-            importantNoti.setLargeIcon(bitmap);
-        }
-
         if (notificationManager != null) {
             notificationManager.notify(notification.getShortId(), importantNoti.build());
         }
     }
 
-    public static void notifySmartNoti(Context context){
+    public static void notifySmartNoti(Context context) {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -119,10 +130,9 @@ public class NotificationHelper {
 
         int color = ContextCompat.getColor(context, R.color.colorPrimary);
 
-        NotificationCompat.Builder importantNoti =  new NotificationCompat.Builder(context, Constants.STATUS)
+        NotificationCompat.Builder importantNoti = new NotificationCompat.Builder(context, Constants.STATUS)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle("Smart Notification is running...")
-                .setContentInfo("testing")
                 .setContentText("Tap to open app")
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
@@ -134,7 +144,48 @@ public class NotificationHelper {
         }
     }
 
-    public static void cancelSmartNotiNotification(Context context){
+    public static void remindHeadsUp(Context context, int toggleCode) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        String actionName = toggleCode == Constants.SMART_NOTIFICATION_ON_CODE ? Constants.TURN_ON : Constants.TURN_OFF;
+
+        Intent mainActivityIntent = new Intent(context, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(mainActivityIntent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent actionIntent = new Intent(context, MainActivity.class);
+        actionIntent.putExtra(TURN_ON_OFF, actionName);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action toggle = new NotificationCompat.Action.Builder(
+                R.drawable.ic_stat_name, actionName, actionPendingIntent).build();
+
+        int color = ContextCompat.getColor(context, R.color.colorPrimary);
+        Uri soundPath = Uri.parse("android.resource://com.kasmartnotification.smartnotification/raw/rhea");
+
+        NotificationCompat.Builder importantNoti = new NotificationCompat.Builder(context, Constants.STATUS)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle(getRandomReminderMessage(actionName))
+                .setContentText("This is location-based")
+                .setContentIntent(pendingIntent)
+                .setColor(color)
+                .setColorized(true)
+                .setVibrate(vibrationPattern)
+                .setSound(soundPath)
+                .setPriority(android.app.Notification.PRIORITY_HIGH)
+                .addAction(toggle)
+                .setStyle(new NotificationCompat.BigTextStyle());
+
+        if (notificationManager != null) {
+            notificationManager.notify(Constants.REMINDER_NOTIFICATION_ID, importantNoti.build());
+        }
+    }
+
+    public static void cancelSmartNotiNotification(Context context) {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -143,16 +194,25 @@ public class NotificationHelper {
         }
     }
 
-    public static void cancelNotification(Context context, int shortId){
+    public static void cancelNotification(Context context, int shortId) {
         //remove that notification
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        try{
+        try {
             if (notificationManager != null) {
                 notificationManager.cancel(shortId);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(Constants.EXCEPTION, e.getLocalizedMessage());
         }
+    }
+
+    private static String getRandomReminderMessage(String toTurnOn) {
+        List<ReminderMessage> reminderMessages = ReminderMessage.find(ReminderMessage.class,
+                "toturnon = ?", toTurnOn);
+
+        Random random = new Random();
+        int randomNum = random.nextInt(reminderMessages.size());
+        return reminderMessages.get(randomNum).getName();
     }
 }

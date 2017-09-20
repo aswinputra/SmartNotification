@@ -1,14 +1,21 @@
 package com.kasmartnotification.smartnotification.Tools;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.Model.Notifications;
+import com.kasmartnotification.smartnotification.Model.Place;
+import com.kasmartnotification.smartnotification.Model.ReminderMessage;
 import com.kasmartnotification.smartnotification.Model.Section;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.Model.Status;
@@ -82,6 +89,14 @@ public class Utility {
                     for(int i = 0; i<4; i++){
                         names.add(((ImportantSender) lists.get(i)).getName());
                     }
+                }else if (lists.get(0)instanceof ReminderMessage){
+                    for(int i = 0; i<4; i++){
+                        names.add(((ReminderMessage) lists.get(i)).getName());
+                    }
+                }else if (lists.get(0)instanceof Place){
+                    for(int i = 0; i<4; i++){
+                        names.add(((Place) lists.get(i)).getName());
+                    }
                 }
             }else{
                 if (lists.get(0) instanceof Keyword){
@@ -91,6 +106,14 @@ public class Utility {
                 }else if(lists.get(0) instanceof ImportantSender){
                     for(int i = 0; i<lists.size(); i++){
                         names.add(((ImportantSender) lists.get(i)).getName());
+                    }
+                }else if (lists.get(0)instanceof ReminderMessage){
+                    for(int i = 0; i<lists.size(); i++){
+                        names.add(((ReminderMessage) lists.get(i)).getName());
+                    }
+                }else if (lists.get(0)instanceof Place){
+                    for(int i = 0; i<lists.size(); i++){
+                        names.add(((Place) lists.get(i)).getName());
                     }
                 }
             }
@@ -113,12 +136,45 @@ public class Utility {
 
     public static  <T> boolean getSwitchValue(T setting, final String type) {
         boolean toggle;
-        if (setting!=null){
-            toggle = ((Setting)setting).isToggle();
-        }else{
+        if (setting != null) {
+            toggle = ((Setting) setting).isToggle();
+        } else {
             toggle = false;
-            SugarHelper.createOrSetDBObject(Setting.class,type, null,null, null, 0, toggle);
+            SugarHelper.createOrSetDBObject(Setting.class, type, null, null, null, 0, toggle);
         }
         return toggle;
+    }
+
+    public static boolean hasPlayServices(Context context, Activity activity) {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(context);
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(activity, result, Constants.PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }
+            Toast.makeText(context, "Can't connect to Google play services", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Log.i(Constants.MISC, "It supports google play services");
+        return true;
+    }
+
+    public static <T> String getNames(List<T> list){
+        String name = "";
+        int count = 0;
+        for (String names : getNamesList(list)){
+            if (count <= 3){
+                if (count==getNamesList(list).size()-1||count==3){
+                    name = name + names;
+                }else{
+                    name = name + names + ", ";
+                }
+            }else if(count == list.size()-1||count==4){
+                name = name + names;
+            }
+            count++;
+        }
+        return name;
+
     }
 }
