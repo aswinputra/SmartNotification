@@ -43,14 +43,14 @@
             android:layout_gravity="center"
             android:id="@+id/activity_settings_location_smart_noti_reminders_switch"/>
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/activity_settings_location_places_linear_layout"
         style="@style/MyFlatButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/activity_settings_location_smart_noti_reminders_linear_layout">
+        app:layout_constraintTop_toBottomOf="@id/activity_settings_location_smart_noti_reminders_linear_layout"
+        android:visibility="gone">
 
         <TextView
             style="@style/TextRadioButton"
@@ -78,7 +78,8 @@
         android:orientation="vertical"
         android:id="@+id/activity_settings_location_reminder_messages_linear_layout"
         app:layout_constraintTop_toBottomOf="@id/activity_settings_location_places_linear_layout"
-        style="@style/MyFlatButton">
+        style="@style/MyFlatButton"
+        android:visibility="gone">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

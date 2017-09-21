@@ -50,6 +50,12 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         allowImportantSendersSwitch.setOnCheckedChangeListener(null);
         allowImportantSendersSwitch.setChecked(booleanSender);
 
+        if (booleanSender){
+            importantSenders.setVisibility(View.VISIBLE);
+        }else {
+            importantSenders.setVisibility(View.GONE);
+        }
+
         List<ImportantSender> senders = ImportantSender.listAll(ImportantSender.class);
 
         if (!senders.isEmpty()){
@@ -63,10 +69,10 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked){
                     //TODO:allow important senders through
-
+                    importantSenders.setVisibility(View.VISIBLE);
                 }else{
                     //TODO:do not allow anyone through
-
+                    importantSenders.setVisibility(View.GONE);
                 }
                 SugarHelper.createOrSetDBObject(Setting.class, Constants.IMPORTANT_SENDER, null, null, null, 0, checked);
             }
@@ -83,6 +89,12 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
         allowKeywordsSwitch.setOnCheckedChangeListener(null);
         allowKeywordsSwitch.setChecked(booleanKeyword);
 
+        if (booleanKeyword){
+            keywords.setVisibility(View.VISIBLE);
+        }else{
+            keywords.setVisibility(View.GONE);
+        }
+
         List<Keyword> keywordsList = Keyword.listAll(Keyword.class);
         if (!keywordsList.isEmpty()){
             keywordsTextView.setText(Utility.getNames(keywordsList));
@@ -95,8 +107,10 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
                     //TODO: allow keywords through
+                    keywords.setVisibility(View.VISIBLE);
                 }else{
                     //TODO: do not allow keywords through
+                    keywords.setVisibility(View.GONE);
                 }
                 SugarHelper.createOrSetDBObject(Setting.class, Constants.IMPORTANT_KEYWORDS, null, null, null, 0, b);
             }

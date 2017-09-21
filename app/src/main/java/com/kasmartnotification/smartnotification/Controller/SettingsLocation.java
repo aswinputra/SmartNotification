@@ -86,6 +86,14 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
         smartNotiReminderSwitch.setOnCheckedChangeListener(null);
         smartNotiReminderSwitch.setChecked(booleanSmartReminder);
 
+        if (booleanSmartReminder){
+            places.setVisibility(View.VISIBLE);
+            reminderMessage.setVisibility(View.VISIBLE);
+        }else{
+            places.setVisibility(View.GONE);
+            reminderMessage.setVisibility(View.GONE);
+        }
+
         smartNotiReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
@@ -95,8 +103,12 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
                     if (!Utility.isServiceRunning(getApplicationContext(),LocationService.class)) {
                         startService(new Intent(SettingsLocation.this, LocationService.class));
                     }
+                    places.setVisibility(View.VISIBLE);
+                    reminderMessage.setVisibility(View.VISIBLE);
                 }else{
                     stopService(new Intent(SettingsLocation.this, LocationService.class));
+                    places.setVisibility(View.GONE);
+                    reminderMessage.setVisibility(View.GONE);
                 }
                 SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null, null, null,0, checked);
             }
