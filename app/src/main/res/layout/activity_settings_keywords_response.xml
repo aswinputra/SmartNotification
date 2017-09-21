@@ -46,7 +46,6 @@
         android:id="@+id/activity_settings_keywords_response_important_senders_linear_layout"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_allow_important_senders_linear_layout"
-        android:background="@drawable/linear_layout_border"
         style="@style/MyFlatButton"
         android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">
         <LinearLayout
@@ -72,6 +71,11 @@
                 android:maxLines="1"/>
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreyDevider"
+        app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_important_senders_linear_layout"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,7 +117,6 @@
         android:id="@+id/activity_settings_keywords_response_keywords_linear_layout"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_allow_keywords_linear_layout"
-        android:background="@drawable/linear_layout_border"
         style="@style/MyFlatButton"
         android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">
         <LinearLayout
@@ -139,69 +142,73 @@
                 android:maxLines="1"/>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/activity_settings_keywords_response_automatic_response_linear_layout"
-        android:orientation="horizontal"
-        android:weightSum="100"
-        app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_keywords_linear_layout"
-        style="@style/MyFlatButton"
-        android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="80"
-            android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TextRadioButton"
-                android:text="@string/automatic_response"
-                android:layout_marginTop="@dimen/margin_top_function"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_top_function"
-                android:text="@string/automatic_response_descriptions" />
-        </LinearLayout>
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:layout_weight="20"
-            android:layout_gravity="center"
-            android:id="@+id/activity_settings_keywords_response_automatic_response_switch"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/activity_settings_keywords_response_reply_messages_linear_layout"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_automatic_response_linear_layout"
-        android:background="@drawable/linear_layout_border"
-        style="@style/MyFlatButton"
-        android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TextRadioButton"
-                android:text="@string/reply_messages"
-                android:layout_marginStart="@dimen/activity_settings_keyword_response_margin_start_end"
-                android:layout_marginEnd="@dimen/activity_settings_keyword_response_margin_start_end"
-                android:layout_marginTop="@dimen/margin_top_function"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_settings_keyword_response_margin_start_end"
-                android:layout_marginEnd="@dimen/activity_settings_keyword_response_margin_start_end"
-                android:layout_marginBottom="@dimen/margin_top_function"
-                android:text="@string/reply_messages_descriptions" />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_height="1dp"
+        android:background="@color/colorGreyDevider"
+        app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_keywords_linear_layout"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/activity_settings_keywords_response_automatic_response_linear_layout"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_keywords_linear_layout"-->
+        <!--style="@style/MyFlatButton"-->
+        <!--android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_weight="80"-->
+            <!--android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/TextRadioButton"-->
+                <!--android:text="@string/automatic_response"-->
+                <!--android:layout_marginTop="@dimen/margin_top_function"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/margin_top_function"-->
+                <!--android:text="@string/automatic_response_descriptions" />-->
+        <!--</LinearLayout>-->
+        <!--<Switch-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingStart="10dp"-->
+            <!--android:layout_weight="20"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:id="@+id/activity_settings_keywords_response_automatic_response_switch"/>-->
+    <!--</LinearLayout>-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/activity_settings_keywords_response_reply_messages_linear_layout"-->
+        <!--android:orientation="horizontal"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/activity_settings_keywords_response_automatic_response_linear_layout"-->
+        <!--style="@style/MyFlatButton"-->
+        <!--android:paddingStart="@dimen/activity_settings_keyword_response_margin_start_end">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/TextRadioButton"-->
+                <!--android:text="@string/reply_messages"-->
+                <!--android:layout_marginStart="@dimen/activity_settings_keyword_response_margin_start_end"-->
+                <!--android:layout_marginEnd="@dimen/activity_settings_keyword_response_margin_start_end"-->
+                <!--android:layout_marginTop="@dimen/margin_top_function"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/activity_settings_keyword_response_margin_start_end"-->
+                <!--android:layout_marginEnd="@dimen/activity_settings_keyword_response_margin_start_end"-->
+                <!--android:layout_marginBottom="@dimen/margin_top_function"-->
+                <!--android:text="@string/reply_messages_descriptions" />-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 </android.support.constraint.ConstraintLayout>

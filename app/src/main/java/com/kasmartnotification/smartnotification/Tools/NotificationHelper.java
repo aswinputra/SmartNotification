@@ -4,20 +4,17 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
-import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.media.AudioAttributesCompat;
 import android.util.Log;
 
 import com.kasmartnotification.smartnotification.Constants;
@@ -29,8 +26,6 @@ import com.kasmartnotification.smartnotification.R;
 
 import java.util.List;
 import java.util.Random;
-
-import static com.kasmartnotification.smartnotification.Constants.TURN_ON_OFF;
 
 /**
  * Created by kiman on 14/9/17.
@@ -76,7 +71,8 @@ public class NotificationHelper {
                 .setAutoCancel(true)
                 .setColor(color)
                 .setColorized(true)
-                .setVibrate(vibrationPattern);
+                .setVibrate(vibrationPattern)
+                .setChannelId(Constants.IMPORTANT);
 
 
         Icon appIcon = notification.getAppIcon();
@@ -137,7 +133,19 @@ public class NotificationHelper {
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setColor(color)
-                .setColorized(true);
+                .setColorized(true)
+                .setChannelId(Constants.STATUS);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            // Do something for Oreo and above versions
+            NotificationChannel mImportantChannel = new NotificationChannel(Constants.STATUS, "Smart Notification is running", NotificationManager.IMPORTANCE_LOW);
+            mImportantChannel.setDescription("Tap to open app");
+            mImportantChannel.enableLights(true);
+            mImportantChannel.setLightColor(color);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(mImportantChannel);
+            }
+        }
 
         if (notificationManager != null) {
             notificationManager.notify(Constants.STATUS_NOTIFICATION_ID, importantNoti.build());
@@ -154,31 +162,52 @@ public class NotificationHelper {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(mainActivityIntent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(
-                0,
+                1,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent actionIntent = new Intent(context, MainActivity.class);
-        actionIntent.putExtra(TURN_ON_OFF, actionName);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        actionIntent.setAction(actionName);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 123, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action toggle = new NotificationCompat.Action.Builder(
-                R.drawable.ic_stat_name, actionName, actionPendingIntent).build();
 
         int color = ContextCompat.getColor(context, R.color.colorPrimary);
-        Uri soundPath = Uri.parse("android.resource://com.kasmartnotification.smartnotification/raw/rhea");
 
         NotificationCompat.Builder importantNoti = new NotificationCompat.Builder(context, Constants.STATUS)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(getRandomReminderMessage(actionName))
                 .setContentText("This is location-based")
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .setColor(color)
                 .setColorized(true)
                 .setVibrate(vibrationPattern)
-                .setSound(soundPath)
-                .setPriority(android.app.Notification.PRIORITY_HIGH)
-                .addAction(toggle)
-                .setStyle(new NotificationCompat.BigTextStyle());
+                .addAction(R.drawable.ic_stat_name, actionName, actionPendingIntent)
+                .setStyle(new NotificationCompat.BigTextStyle())
+                .setChannelId("LOCATION");
+
+        if(actionName.equals(Constants.TURN_ON)){
+            Uri soundPath = Uri.parse("android.resource://com.kasmartnotification.smartnotification/raw/rhea");
+            importantNoti
+                    .setVibrate(vibrationPattern)
+                    .setSound(soundPath)
+                    .setPriority(android.app.Notification.PRIORITY_HIGH);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            // Do something for Oreo and above versions
+            NotificationChannel mImportantChannel = new NotificationChannel("LOCATION", "Smart Notification Location", NotificationManager.IMPORTANCE_HIGH);
+            mImportantChannel.enableLights(true);
+            mImportantChannel.enableVibration(true);
+            mImportantChannel.setVibrationPattern(vibrationPattern);
+            mImportantChannel.setLightColor(color);
+            if(actionName.equals(Constants.TURN_ON)) {
+                Uri soundPath = Uri.parse("android.resource://com.kasmartnotification.smartnotification/raw/rhea");
+                mImportantChannel.setSound(soundPath, mImportantChannel.getAudioAttributes());
+            }
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(mImportantChannel);
+            }
+        }
 
         if (notificationManager != null) {
             notificationManager.notify(Constants.REMINDER_NOTIFICATION_ID, importantNoti.build());

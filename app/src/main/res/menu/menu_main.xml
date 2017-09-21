@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.kasmartnotification.smartnotification.Controller.MainActivity">
     <item
+        android:id="@+id/action_report_feedback"
+        android:orderInCategory="100"
+        android:title="@string/send_feedback"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_feedback_white_24dp"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

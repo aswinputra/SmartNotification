@@ -24,11 +24,11 @@ public class Settings extends AppCompatActivity implements View.OnClickListener 
 
         time = findViewById(R.id.activity_settings_time_linear_layout);
         location = findViewById(R.id.activity_settings_location_linear_layout);
-        activity = findViewById(R.id.activity_settings_activity_linear_layout);
+//        activity = findViewById(R.id.activity_settings_activity_linear_layout);
         keywords = findViewById(R.id.activity_settings_keywords_linear_layout);
         time.setOnClickListener(this);
         location.setOnClickListener(this);
-        activity.setOnClickListener(this);
+//        activity.setOnClickListener(this);
         keywords.setOnClickListener(this);
     }
 
@@ -44,10 +44,10 @@ public class Settings extends AppCompatActivity implements View.OnClickListener 
                 intent = new Intent(this,SettingsLocation.class);
                 startActivity(intent);
                 break;
-            case R.id.activity_settings_activity_linear_layout:
-                intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.activity_settings_activity_linear_layout:
+//                intent = new Intent(this, SettingsActivity.class);
+//                startActivity(intent);
+//                break;
             case R.id.activity_settings_keywords_linear_layout:
                 intent = new Intent(this, SettingsKeywordsResponse.class);
                 startActivity(intent);

@@ -142,7 +142,7 @@ public class Notification extends SugarRecord{
         //TODO: we might need a database for this or a list
         String message = this.message.toLowerCase();
         return !message.isEmpty() &&
-                !message.equals("null");
+                !message.equals("null")|| message.contains("Checking for new messages");
     }
 
     public boolean importantByKeyword(){

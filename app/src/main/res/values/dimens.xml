@@ -28,4 +28,5 @@
     <dimen name="activity_settings_keyword_response_margin_start_end">10dp</dimen>
 
     <dimen name="fab_border_width">0dp</dimen>
+    <dimen name="fab_person_size">50dp</dimen>
 </resources>

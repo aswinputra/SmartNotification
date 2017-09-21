@@ -1,6 +1,10 @@
 package com.kasmartnotification.smartnotification.Controller;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.LocationTools.LocationHelper;
 import com.kasmartnotification.smartnotification.Model.Setting;
 import com.kasmartnotification.smartnotification.R;
 import com.kasmartnotification.smartnotification.Tools.SugarHelper;
@@ -28,6 +33,8 @@ import com.kasmartnotification.smartnotification.Tools.Utility;
 import com.orm.SugarRecord;
 
 import java.util.List;
+
+import static com.kasmartnotification.smartnotification.Constants.PERMISSION_ACCESS_COARSE_LOCATION;
 
 public class SettingsLocation extends AppCompatActivity implements View.OnClickListener {
 
@@ -68,21 +75,30 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
 
         smartNotiReminderSwitch = findViewById(R.id.activity_settings_location_smart_noti_reminders_switch);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null,null,null,0,false);
+        }
+
         Setting smartReminderSetting = SugarHelper.findFromDB(Setting.class, Constants.SMART_REMINDER);
         booleanSmartReminder = Utility.getSwitchValue(smartReminderSetting, Constants.SMART_REMINDER);
+        //remove the listener so it does not go to Change Listener when the activity start running
         smartNotiReminderSwitch.setOnCheckedChangeListener(null);
         smartNotiReminderSwitch.setChecked(booleanSmartReminder);
 
         smartNotiReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                //TODO: Do something when b is true
-                if (b){
-                    startService(new Intent(SettingsLocation.this, LocationService.class));
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                //TODO: Do something when checked is true
+                if (checked){
+                    LocationHelper.getLocationPermission(getApplicationContext(), SettingsLocation.this);
+                    if (!Utility.isServiceRunning(getApplicationContext(),LocationService.class)) {
+                        startService(new Intent(SettingsLocation.this, LocationService.class));
+                    }
                 }else{
                     stopService(new Intent(SettingsLocation.this, LocationService.class));
                 }
-                SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null, null, null,0, b);
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null, null, null,0, checked);
             }
         });
 
@@ -110,6 +126,21 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
             case R.id.activity_settings_location_reminder_messages_linear_layout:
                 intent = new Intent(this, SettingsReminderMessages.class);
                 startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ACCESS_COARSE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // All good!
+                } else {
+                    Toast.makeText(this, "Need your location to activate this feature", Toast.LENGTH_SHORT).show();
+                    SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null,null,null,0,false);
+                    smartNotiReminderSwitch.setChecked(false);
+                }
                 break;
         }
     }

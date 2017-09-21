@@ -10,8 +10,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/adapter_notification_circle_imageview"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/fab_person_size"
+        android:layout_height="@dimen/fab_person_size"
         app:civ_border_color="@android:color/white"
         app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"

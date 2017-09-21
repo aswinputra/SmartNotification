@@ -11,4 +11,6 @@
     <color name="colorGrey">#aaa</color>
 
     <color name="statusbar_color">@color/colorPrimaryDark</color>
+    <color name="colorFabBackground">#FFF</color>
+    <color name="colorGreyDevider">#D3D3D3</color>
 </resources>

@@ -13,7 +13,6 @@
         android:id="@+id/activity_settings_time_linear_layout"
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-        android:background="@drawable/linear_layout_border"
         android:weightSum="100"
         style="@style/MyFlatButton">
         <ImageView
@@ -30,6 +29,10 @@
             android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreyDevider"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +40,6 @@
         android:id="@+id/activity_settings_location_linear_layout"
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-        android:background="@drawable/linear_layout_border"
         android:weightSum="100"
         style="@style/MyFlatButton">
         <ImageView
@@ -54,30 +56,37 @@
             android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/activity_settings_activity_linear_layout"
-        android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
-        android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-        android:background="@drawable/linear_layout_border"
-        android:weightSum="100"
-        style="@style/MyFlatButton">
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="@dimen/settings_weight_image"
-            android:src="@drawable/ic_activity_grey_24dp"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_settings_time_margin_start"
-            android:text="@string/activity"
-            android:layout_gravity="center"
-            android:layout_weight="@dimen/settings_weight_text_view"
-            style="@style/TextRadioButton"/>
-    </LinearLayout>
+        android:layout_height="1dp"
+        android:background="@color/colorGreyDevider"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:id="@+id/activity_settings_activity_linear_layout"-->
+        <!--android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"-->
+        <!--android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"-->
+        <!--android:weightSum="100"-->
+        <!--style="@style/MyFlatButton">-->
+        <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="@dimen/settings_weight_image"-->
+            <!--android:src="@drawable/ic_activity_grey_24dp"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="@dimen/activity_settings_time_margin_start"-->
+            <!--android:text="@string/activity"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_weight="@dimen/settings_weight_text_view"-->
+            <!--style="@style/TextRadioButton"/>-->
+    <!--</LinearLayout>-->
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/colorGreyDevider"/>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -85,7 +94,6 @@
         android:id="@+id/activity_settings_keywords_linear_layout"
         android:paddingTop="@dimen/activity_settings_linear_layout_paddingTopBottom"
         android:paddingBottom="@dimen/activity_settings_linear_layout_paddingTopBottom"
-        android:background="@drawable/linear_layout_border"
         android:weightSum="100"
         style="@style/MyFlatButton">
         <ImageView
@@ -97,9 +105,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_settings_time_margin_start"
-            android:text="@string/keywords"
+            android:text="@string/keywords_senders"
             android:layout_gravity="center_vertical"
             android:layout_weight="@dimen/settings_weight_text_view"
             style="@style/TextRadioButton"/>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreyDevider"/>
 </LinearLayout>

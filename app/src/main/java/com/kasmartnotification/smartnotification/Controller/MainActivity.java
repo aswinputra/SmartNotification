@@ -1,11 +1,13 @@
 package com.kasmartnotification.smartnotification.Controller;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -44,7 +46,6 @@ import java.text.DecimalFormat;
 
 import static com.kasmartnotification.smartnotification.Constants.TURN_OFF;
 import static com.kasmartnotification.smartnotification.Constants.TURN_ON;
-import static com.kasmartnotification.smartnotification.Constants.TURN_ON_OFF;
 import static com.kasmartnotification.smartnotification.Constants.PERMISSION_ACCESS_COARSE_LOCATION;
 
 public class MainActivity extends AppCompatActivity implements
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements
     private static DecimalFormat timeFormat = new DecimalFormat("#.#");
 
     private SmartNotiDialog dialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,16 +107,16 @@ public class MainActivity extends AppCompatActivity implements
     private void handleIntentFromNotification() {
         Intent intent = getIntent();
         if(intent!=null) {
-            String action = intent.getStringExtra(TURN_ON_OFF);
+            String action = intent.getAction();
             if(action!=null) {
                 if (action.equals(TURN_ON)) {
                     showSmartNotiDialog();
                 } else if (action.equals(TURN_OFF)) {
                     stopSmartNoti();
                 }
+                NotificationHelper.cancelNotification(this, Constants.REMINDER_NOTIFICATION_ID);
             }
         }
-
     }
 
     @Override
@@ -138,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
             return true;
+        }else if (id==R.id.action_report_feedback){
+            sendFeedback();
         }
 
         return super.onOptionsItemSelected(item);
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements
         SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null,0);
 
         refreshView();
+
     }
 
     /**
@@ -399,17 +402,15 @@ public class MainActivity extends AppCompatActivity implements
         return (int)time/60%24;
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_ACCESS_COARSE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // All good!
-                    //TODO: start with when the setting is turned off and STOP it when the setting is turned off
-                    startService(new Intent(this, LocationService.class));
                 } else {
                     Toast.makeText(this, "Need your location!", Toast.LENGTH_SHORT).show();
+                    SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null,null,null,0,false);
                 }
                 break;
         }
@@ -419,6 +420,22 @@ public class MainActivity extends AppCompatActivity implements
     public void OnGPSResult(int statusCode) {
         if (statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
             Toast.makeText(this, "GPS is unavailable", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sendFeedback(){
+        String subject = "Smart Notification feedback";
+        String bodyText = "Please provide your feedback below. \n Please include images if applicable";
+        String email = "mailto:11883170@student.uts.edu.au" +
+                "?cc=" + "11836210@student.uts.edu.au" +
+                "&subject=" + Uri.encode(subject) +
+                "&body=" + Uri.encode(bodyText);
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse(email));
+        try{
+            startActivity(Intent.createChooser(emailIntent,"Pick your app..."));
+        }catch (Exception e){
+            //nothing;
         }
     }
 

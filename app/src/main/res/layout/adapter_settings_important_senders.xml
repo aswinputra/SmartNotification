@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/noti_top_padding"
-    android:id="@+id/adapter_important_senders_linear_layout"
-    style="@style/MyFlatButton"
-    android:gravity="start">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/adapter_settings_important_sender_imageview"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/thumbnail"
-        app:civ_border_color="@android:color/white"
-        app:civ_border_width="2dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/adapter_important_senders"
-        style="@style/TextRadioButton"
-        android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:paddingEnd="@dimen/noti_top_padding"
-        android:paddingStart="@dimen/noti_top_padding"
-        app:layout_constraintStart_toEndOf="@id/adapter_notification_circle_imageview"
-        app:layout_constraintTop_toTopOf="parent"
-        android:maxWidth="300dp"
-        android:text="Chloe Power"
-        android:layout_gravity="center_vertical"/>
+        android:orientation="horizontal"
+        style="@style/MyFlatButton"
+        android:gravity="start"
+        android:id="@+id/adapter_important_senders_linear_layout">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/adapter_settings_important_sender_imageview"
+            android:layout_width="@dimen/fab_person_size"
+            android:layout_height="@dimen/fab_person_size"
+            android:src="@drawable/ic_person_grey_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/adapter_important_senders"
+            style="@style/TextRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:paddingEnd="@dimen/noti_top_padding"
+            android:paddingStart="@dimen/noti_top_padding"
+            app:layout_constraintStart_toEndOf="@id/adapter_notification_circle_imageview"
+            app:layout_constraintTop_toTopOf="parent"
+            android:maxWidth="300dp"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreyDevider"/>
 </LinearLayout>

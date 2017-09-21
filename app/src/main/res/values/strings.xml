@@ -75,4 +75,6 @@
     <string name="expand">expand</string>
     <string name="main_hours">Hours</string>
     <string name="main_hour">Hour</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="keywords_senders"><![CDATA[Keywords & Senders]]></string>
 </resources>

@@ -46,6 +46,7 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
 
         Setting allowImportantSndrSetting = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_SENDER);
         booleanSender = Utility.getSwitchValue(allowImportantSndrSetting, Constants.IMPORTANT_SENDER);
+        //remove the listener so it does not go to Change Listener when the activity start running
         allowImportantSendersSwitch.setOnCheckedChangeListener(null);
         allowImportantSendersSwitch.setChecked(booleanSender);
 
@@ -59,15 +60,15 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
 
         allowImportantSendersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if (checked){
                     //TODO:allow important senders through
 
                 }else{
                     //TODO:do not allow anyone through
 
                 }
-                SugarHelper.createOrSetDBObject(Setting.class, Constants.IMPORTANT_SENDER, null, null, null, 0, b);
+                SugarHelper.createOrSetDBObject(Setting.class, Constants.IMPORTANT_SENDER, null, null, null, 0, checked);
             }
         });
 
@@ -78,6 +79,7 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
 
         Setting allowKeywordsSetting = SugarHelper.findFromDB(Setting.class, Constants.IMPORTANT_KEYWORDS);
         booleanKeyword = Utility.getSwitchValue(allowKeywordsSetting, Constants.IMPORTANT_KEYWORDS);
+        //remove the listener so it does not go to Change Listener when the activity start running
         allowKeywordsSwitch.setOnCheckedChangeListener(null);
         allowKeywordsSwitch.setChecked(booleanKeyword);
 
@@ -100,33 +102,34 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
             }
         });
 
-        automaticResponse = findViewById(R.id.activity_settings_keywords_response_automatic_response_linear_layout);
-        replyMessages = findViewById(R.id.activity_settings_keywords_response_reply_messages_linear_layout);
-        automaticResponseSwitch = findViewById(R.id.activity_settings_keywords_response_automatic_response_switch);
-
-        Setting automaticResponseSetting = SugarHelper.findFromDB(Setting.class, Constants.AUTOMATIC_RESPONSE);
-        booleanAutoResponse = Utility.getSwitchValue(automaticResponseSetting, Constants.AUTOMATIC_RESPONSE);
-        automaticResponseSwitch.setOnCheckedChangeListener(null);
-        automaticResponseSwitch.setChecked(booleanAutoResponse);
-
-        automaticResponseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b){
-                    //TODO: automatic response on
-                }else{
-                    //TODO: automatic response off
-                }
-                SugarHelper.createOrSetDBObject(Setting.class, Constants.AUTOMATIC_RESPONSE, null, null, null, 0, b);
-            }
-        });
+//        automaticResponse = findViewById(R.id.activity_settings_keywords_response_automatic_response_linear_layout);
+//        replyMessages = findViewById(R.id.activity_settings_keywords_response_reply_messages_linear_layout);
+//        automaticResponseSwitch = findViewById(R.id.activity_settings_keywords_response_automatic_response_switch);
+//
+//        Setting automaticResponseSetting = SugarHelper.findFromDB(Setting.class, Constants.AUTOMATIC_RESPONSE);
+//        booleanAutoResponse = Utility.getSwitchValue(automaticResponseSetting, Constants.AUTOMATIC_RESPONSE);
+        //remove the listener so it does not go to Change Listener when the activity start running
+//        automaticResponseSwitch.setOnCheckedChangeListener(null);
+//        automaticResponseSwitch.setChecked(booleanAutoResponse);
+//
+//        automaticResponseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if (b){
+//                    //TODO: automatic response on
+//                }else{
+//                    //TODO: automatic response off
+//                }
+//                SugarHelper.createOrSetDBObject(Setting.class, Constants.AUTOMATIC_RESPONSE, null, null, null, 0, b);
+//            }
+//        });
 
         importantSenders.setOnClickListener(this);
         allowImportantSenders.setOnClickListener(this);
         allowKeywords.setOnClickListener(this);
         keywords.setOnClickListener(this);
-        automaticResponse.setOnClickListener(this);
-        replyMessages.setOnClickListener(this);
+//        automaticResponse.setOnClickListener(this);
+//        replyMessages.setOnClickListener(this);
     }
 
     @Override
@@ -155,16 +158,16 @@ public class SettingsKeywordsResponse extends AppCompatActivity implements View.
                 intent = new Intent(this, SettingsKeywords.class);
                 startActivity(intent);
                 break;
-            case R.id.activity_settings_keywords_response_automatic_response_linear_layout:
-                if (automaticResponseSwitch.isChecked()){
-                    automaticResponseSwitch.setChecked(false);
-                }else{
-                    automaticResponseSwitch.setChecked(true);
-                }
-                break;
-            case R.id.activity_settings_keywords_response_reply_messages_linear_layout:
-                //TODO: automatic response page
-                break;
+//            case R.id.activity_settings_keywords_response_automatic_response_linear_layout:
+//                if (automaticResponseSwitch.isChecked()){
+//                    automaticResponseSwitch.setChecked(false);
+//                }else{
+//                    automaticResponseSwitch.setChecked(true);
+//                }
+//                break;
+//            case R.id.activity_settings_keywords_response_reply_messages_linear_layout:
+//                //TODO: automatic response page
+//                break;
         }
     }
 }
