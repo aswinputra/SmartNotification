@@ -95,8 +95,12 @@ public class MainActivity extends AppCompatActivity implements
             Facet.setDefaultValues();
         }
 
-        LocationHelper.getLocationPermission(this, this);
-        getNotificationAccessPermission();
+        Setting firstTimeOpen = SugarHelper.findFromDB(Setting.class, Constants.FIRST_TIME_OPEN);
+
+        if(firstTimeOpen == null){
+            new WelcomeDialog(this);
+            SugarHelper.createOrSetDBObject(Setting.class, Constants.FIRST_TIME_OPEN, null, null, null, 0, true);
+        }
 
         MyGoogleLocationApiClient client = new MyGoogleLocationApiClient(this);
         client.setUpGPS(this, this);
@@ -149,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements
         dialog = new SmartNotiDialog(this, this);
         dialog.setContentView(R.layout.smart_notification_dialog);
         dialog.show();
+        Utility.getNotificationAccessPermission(this);
     }
 
     /**
@@ -377,13 +382,6 @@ public class MainActivity extends AppCompatActivity implements
         NotificationHelper.cancelSmartNotiNotification(this);
     }
 
-    private void getNotificationAccessPermission() {
-        if (!Utility.isNotificationListenEnabled(getApplicationContext())) {
-            //TODO: show dialog asking to go to notification access setting
-            Intent intent = new Intent(Constants.NOTIFICATION_ACCESS_SETTING);
-            startActivity(intent);
-        }
-    }
 
     @Override
     public void onBackPressed() {

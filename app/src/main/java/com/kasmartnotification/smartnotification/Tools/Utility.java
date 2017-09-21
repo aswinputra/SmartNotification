@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.kasmartnotification.smartnotification.Constants;
+import com.kasmartnotification.smartnotification.Controller.NotificationAccessDialog;
 import com.kasmartnotification.smartnotification.Model.ImportantSender;
 import com.kasmartnotification.smartnotification.Model.Keyword;
 import com.kasmartnotification.smartnotification.Model.Notifications;
@@ -187,5 +188,11 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    public static void getNotificationAccessPermission(Context context) {
+        if (!Utility.isNotificationListenEnabled(context)) {
+            new NotificationAccessDialog(context);
+        }
     }
 }

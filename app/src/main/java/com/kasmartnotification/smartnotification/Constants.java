@@ -75,4 +75,6 @@ public class Constants {
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 7709;
     public static final double BOUND_BIAS_RADIUS_METERS = 50000; //50KM
     public static final String NOTIFICATION_REQUEST_CODE = "NOTIFICATION REQUEST";
+
+    public static final String FIRST_TIME_OPEN = "FIRST_TIME_APP";
 }

@@ -37,6 +37,7 @@ public class DeleteDialog extends AlertDialog {
         final TextView input = new TextView(mContext);
         if(object instanceof Place) {
             input.setText(((Place) object).getName());
+            input.setTextSize(16);
         }
         input.setLayoutParams(lp);
         container.addView(input);

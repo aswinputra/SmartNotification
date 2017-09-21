@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.kasmartnotification.smartnotification.R;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
 public class Settings extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,6 +31,9 @@ public class Settings extends AppCompatActivity implements View.OnClickListener 
         location.setOnClickListener(this);
 //        activity.setOnClickListener(this);
         keywords.setOnClickListener(this);
+
+        Utility.getNotificationAccessPermission(this);
+
     }
 
     @Override

@@ -70,7 +70,7 @@ public class ImportantSendersAdapter extends RecyclerView.Adapter<ImportantSende
         }
 
         private void showEditDialog(int position) {
-            EditDialog editDialog = new EditDialog(mContext, mImportantSenders.get(position), this, true);
+            new EditDialog(mContext, mImportantSenders.get(position), this, true);
         }
 
         @Override

@@ -77,4 +77,9 @@
     <string name="main_hour">Hour</string>
     <string name="send_feedback">Send Feedback</string>
     <string name="keywords_senders"><![CDATA[Keywords & Senders]]></string>
+    <string name="welcome_dialog_description">This app would help boost your
+                productivity when you are trying to focus. Now let’s go to
+                Settings to personalise it to
+                your liking.</string>
+    <string name="notification_acess_text">On the next screen, allow this app to access your notifications by: \n1. Locate the Smart Notification app \n2. Switch the toggle on \nRefer to image below</string>
 </resources>
