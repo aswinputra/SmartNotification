@@ -52,7 +52,8 @@
         <activity
             android:name=".Controller.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -63,43 +64,52 @@
         <activity
             android:name=".Controller.Settings"
             android:label="@string/action_settings"
-            android:parentActivityName=".Controller.MainActivity" />
+            android:parentActivityName=".Controller.MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsTime"
             android:label="@string/time"
-            android:parentActivityName=".Controller.Settings" />
+            android:parentActivityName=".Controller.Settings"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsLocation"
             android:label="@string/location"
-            android:parentActivityName=".Controller.Settings" />
+            android:parentActivityName=".Controller.Settings"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsPlaces"
             android:label="@string/places"
             android:parentActivityName=".Controller.SettingsLocation"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsReminderMessages"
             android:label="@string/reminder_messages"
             android:parentActivityName=".Controller.SettingsLocation"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsKeywordsResponse"
             android:label="@string/keywords"
-            android:parentActivityName=".Controller.Settings" />
+            android:parentActivityName=".Controller.Settings"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsImportantSenders"
             android:label="@string/important_senders"
             android:parentActivityName=".Controller.SettingsKeywordsResponse"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsKeywords"
             android:label="@string/settings_keywords"
             android:parentActivityName=".Controller.SettingsKeywordsResponse"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Controller.SettingsActivity"
             android:label="@string/activity"
-            android:parentActivityName=".Controller.Settings"/>
+            android:parentActivityName=".Controller.Settings"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
