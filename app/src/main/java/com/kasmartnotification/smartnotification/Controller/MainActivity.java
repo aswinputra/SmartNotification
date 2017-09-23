@@ -91,13 +91,13 @@ public class MainActivity extends AppCompatActivity implements
 
         bottomSheet = new NotiBottomSheet(getApplicationContext(), this);
 
-        if(!Facet.hasSetDefaultValues()){
+        if (!Facet.hasSetDefaultValues()) {
             Facet.setDefaultValues();
         }
 
         Setting firstTimeOpen = SugarHelper.findFromDB(Setting.class, Constants.FIRST_TIME_OPEN);
 
-        if(firstTimeOpen == null){
+        if (firstTimeOpen == null) {
             new WelcomeDialog(this);
             SugarHelper.createOrSetDBObject(Setting.class, Constants.FIRST_TIME_OPEN, null, null, null, 0, true);
         }
@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void handleIntentFromNotification() {
         Intent intent = getIntent();
-        if(intent!=null) {
+        if (intent != null) {
             String action = intent.getAction();
-            if(action!=null) {
+            if (action != null) {
                 if (action.equals(TURN_ON)) {
                     showSmartNotiDialog();
                 } else if (action.equals(TURN_OFF)) {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
             return true;
-        }else if (id==R.id.action_report_feedback){
+        } else if (id == R.id.action_report_feedback) {
             sendFeedback();
         }
 
@@ -178,19 +178,19 @@ public class MainActivity extends AppCompatActivity implements
                     if (intent.getAction().equals(Constants.PERIOD_TIME)) {
                         String time = intent.getStringExtra(Constants.REMAINING_TIME);
                         double theTime = Integer.parseInt(time);
-                        if (theTime<=60){
-                            String focusTimer = Integer.toString((int)theTime);
+                        if (theTime <= 60) {
+                            String focusTimer = Integer.toString((int) theTime);
                             timerTV.setText(focusTimer);
                             minutesTV.setText(R.string.minutes);
-                        }else {
+                        } else {
                             String focusTimer;
-                            if (getMinute(theTime)!=0){
-                                focusTimer = String.format("%d:%02d",getHour(theTime) , getMinute(theTime));
-                            }else{
+                            if (getMinute(theTime) != 0) {
+                                focusTimer = String.format("%d:%02d", getHour(theTime), getMinute(theTime));
+                            } else {
                                 focusTimer = Integer.toString(getHour(theTime));
                             }
                             timerTV.setText(focusTimer);
-                            if (getHour(theTime)>1){
+                            if (getHour(theTime) > 1) {
                                 minutesTV.setText(R.string.main_hour);
                             }
                             minutesTV.setText(R.string.main_hours);
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements
         intentFilter.addAction(Constants.SMART_NOTIFICATION_END);
         LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver), intentFilter);
 
-        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null,0);
+        SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, true, null, null, 0);
 
         refreshView();
 
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements
         SugarHelper.createOrSetDBObject(Status.class, Constants.LOCAL_BROADCAST_REGISTERED, false, null, null, 0);
 
         //this is to prevent leaking window
-        if(dialog != null && dialog.isShowing()){
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
 
@@ -392,12 +392,12 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private int getMinute(double time){
-        return (int)time%60;
+    private int getMinute(double time) {
+        return (int) time % 60;
     }
 
-    private int getHour(double time){
-        return (int)time/60%24;
+    private int getHour(double time) {
+        return (int) time / 60 % 24;
     }
 
     @Override
@@ -408,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements
                     // All good!
                 } else {
                     Toast.makeText(this, "Need your location!", Toast.LENGTH_SHORT).show();
-                    SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null,null,null,0,false);
+                    SugarHelper.createOrSetDBObject(Setting.class, Constants.SMART_REMINDER, null, null, null, 0, false);
                 }
                 break;
         }
@@ -421,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public void sendFeedback(){
+    public void sendFeedback() {
         String subject = "Smart Notification feedback";
         String bodyText = "Please provide your feedback below. \n Please include images if applicable";
         String email = "mailto:11883170@student.uts.edu.au" +
@@ -430,9 +430,9 @@ public class MainActivity extends AppCompatActivity implements
                 "&body=" + Uri.encode(bodyText);
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
         emailIntent.setData(Uri.parse(email));
-        try{
-            startActivity(Intent.createChooser(emailIntent,"Pick your app..."));
-        }catch (Exception e){
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Pick your app..."));
+        } catch (Exception e) {
             //nothing;
         }
     }

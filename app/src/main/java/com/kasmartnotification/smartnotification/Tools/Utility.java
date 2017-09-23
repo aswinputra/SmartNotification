@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.media.AudioManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +26,8 @@ import com.kasmartnotification.smartnotification.Model.Status;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static android.content.Context.AUDIO_SERVICE;
 
 /**
  * Created by kiman on 27/8/17.
@@ -193,6 +196,20 @@ public class Utility {
     public static void getNotificationAccessPermission(Context context) {
         if (!Utility.isNotificationListenEnabled(context)) {
             new NotificationAccessDialog(context);
+        }
+    }
+
+    public static void enableVibration(Context context){
+        AudioManager audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        }
+    }
+
+    public static void disableVibration(Context context){
+        AudioManager audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
         }
     }
 }

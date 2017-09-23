@@ -2,6 +2,7 @@ package com.kasmartnotification.smartnotification.Services;
 
 import android.app.Notification;
 import android.graphics.drawable.Icon;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -10,6 +11,7 @@ import android.util.Log;
 import com.kasmartnotification.smartnotification.Constants;
 import com.kasmartnotification.smartnotification.Model.Notifications;
 import com.kasmartnotification.smartnotification.Tools.SugarHelper;
+import com.kasmartnotification.smartnotification.Tools.Utility;
 
 /**
  * Created by kiman on 1/9/17.

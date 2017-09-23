@@ -39,11 +39,6 @@ public class NotificationHelper {
         Notifications notifications = Notifications.getInstance();
         for (Notification notification : notifications.getNotificationList()) {
             notify(context, notification, notification.isImportant());
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 

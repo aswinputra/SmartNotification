@@ -2,6 +2,7 @@ package com.kasmartnotification.smartnotification.Controller;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -82,5 +83,10 @@ public class SettingsKeywords extends AppCompatActivity implements OnDialogAddLi
     @Override
     public void onOK(String s) {
         addKeyword(s);
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
     }
 }

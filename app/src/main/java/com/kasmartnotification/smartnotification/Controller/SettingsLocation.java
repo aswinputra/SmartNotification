@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ import com.orm.SugarRecord;
 import java.util.List;
 
 import static com.kasmartnotification.smartnotification.Constants.PERMISSION_ACCESS_COARSE_LOCATION;
+import static com.kasmartnotification.smartnotification.Constants.TURN_ON;
 
 public class SettingsLocation extends AppCompatActivity implements View.OnClickListener {
 
@@ -66,7 +68,7 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
         reminderMessage = findViewById(R.id.activity_settings_location_reminder_messages_linear_layout);
         reminderMessageTV = findViewById(R.id.activity_settings_location_reminder_messages_text_view);
 
-        List<ReminderMessage> messages = SugarRecord.listAll(ReminderMessage.class);
+        List<ReminderMessage> messages = ReminderMessage.find(ReminderMessage.class, "toturnon = ?", TURN_ON);
         if (!messages.isEmpty()){
             reminderMessageTV.setText(Utility.getNames(messages));
         }else {
@@ -156,4 +158,5 @@ public class SettingsLocation extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
 }
